@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="primary">#2563EB</color>
+    <color name="primary_dark">#1D4ED8</color>
+    <color name="primary_light">#DBEAFE</color>
+    <color name="accent">#10B981</color>
+
+    <!-- Neutral -->
+    <color name="white">#FFFFFF</color>
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_hint">#94A3B8</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="input_bg">#F1F5F9</color>
+
+    <!-- Status -->
+    <color name="error">#EF4444</color>
+    <color name="success">#10B981</color>
+    <color name="warning">#F59E0B</color>
+
+    <!-- Role Colors -->
+    <color name="landlord_color">#7C3AED</color>
+    <color name="landlord_light">#EDE9FE</color>
+    <color name="tenant_color">#0891B2</color>
+    <color name="tenant_light">#CFFAFE</color>
+</resources>

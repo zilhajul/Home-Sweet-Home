@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">House Rent Manager</string>
+
+    <!-- Role Selection -->
+    <string name="select_role">Who are you?</string>
+    <string name="role_subtitle">Select your role to continue</string>
+    <string name="role_landlord">Landlord</string>
+    <string name="role_tenant">Tenant</string>
+    <string name="role_landlord_desc">Manage properties, tenants and rent</string>
+    <string name="role_tenant_desc">View rent details and make requests</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to your account</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="btn_login">Sign In</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="no_account">Don\'t have an account? </string>
+    <string name="sign_up">Sign Up</string>
+    <string name="have_account">Already have an account? </string>
+    <string name="sign_in">Sign In</string>
+
+    <!-- Register -->
+    <string name="register_title">Create account</string>
+    <string name="register_subtitle">Join as a %s</string>
+    <string name="full_name_hint">Full name</string>
+    <string name="phone_hint">Phone number</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="btn_register">Create Account</string>
+    <string name="terms_text">By registering, you agree to our Terms of Service and Privacy Policy</string>
+
+    <!-- Forgot Password -->
+    <string name="forgot_title">Reset password</string>
+    <string name="forgot_subtitle">Enter your email and we\'ll send an OTP</string>
+    <string name="btn_send_otp">Send OTP</string>
+    <string name="back_to_login">Back to Sign In</string>
+
+    <!-- OTP -->
+    <string name="otp_title">Verify OTP</string>
+    <string name="otp_subtitle">Enter the 6-digit code sent to\n%s</string>
+    <string name="btn_verify">Verify</string>
+    <string name="resend_otp">Didn\'t receive it? </string>
+    <string name="resend">Resend</string>
+    <string name="otp_hint">Enter 6-digit OTP</string>
+
+    <!-- Reset Password -->
+    <string name="reset_title">New password</string>
+    <string name="reset_subtitle">Set a strong password for your account</string>
+    <string name="new_password_hint">New password</string>
+    <string name="btn_reset">Reset Password</string>
+
+    <!-- Validation -->
+    <string name="error_empty_email">Email is required</string>
+    <string name="error_invalid_email">Enter a valid email</string>
+    <string name="error_empty_password">Password is required</string>
+    <string name="error_short_password">Password must be at least 8 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_empty_name">Full name is required</string>
+    <string name="error_empty_phone">Phone number is required</string>
+    <string name="error_invalid_phone">Enter a valid phone number</string>
+    <string name="error_empty_otp">OTP is required</string>
+    <string name="error_invalid_otp">Enter a valid 6-digit OTP</string>
+
+    <!-- General -->
+    <string name="loading">Please wait…</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_network">No internet connection</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="success_register">Account created successfully!</string>
+    <string name="success_reset">Password reset successfully!</string>
+</resources>
