@@ -13,7 +13,7 @@
     <!-- Login -->
     <string name="login_title">Welcome back</string>
     <string name="login_subtitle">Sign in to your account</string>
-    <string name="email_hint">Email address</string>
+    <string name="number_hint">Number</string>
     <string name="password_hint">Password</string>
     <string name="btn_login">Sign In</string>
     <string name="forgot_password">Forgot password?</string>
@@ -39,7 +39,7 @@
 
     <!-- OTP -->
     <string name="otp_title">Verify OTP</string>
-    <string name="otp_subtitle">Enter the 6-digit code sent to\n%s</string>
+    <string name="otp_subtitle">Enter the 4-digit code sent to\n%s</string>
     <string name="btn_verify">Verify</string>
     <string name="resend_otp">Didn\'t receive it? </string>
     <string name="resend">Resend</string>
@@ -61,7 +61,7 @@
     <string name="error_empty_phone">Phone number is required</string>
     <string name="error_invalid_phone">Enter a valid phone number</string>
     <string name="error_empty_otp">OTP is required</string>
-    <string name="error_invalid_otp">Enter a valid 6-digit OTP</string>
+    <string name="error_invalid_otp">Enter a valid 4-digit OTP</string>
 
     <!-- General -->
     <string name="loading">Please wait…</string>
@@ -71,4 +71,5 @@
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="success_register">Account created successfully!</string>
     <string name="success_reset">Password reset successfully!</string>
+
 </resources>

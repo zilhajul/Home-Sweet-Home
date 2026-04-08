@@ -25,14 +25,12 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (session.isLoggedIn()) {
-                // Already logged in — route to correct dashboard
                 if (session.isLandlord()) {
                     startActivity(new Intent(this, LandlordDashboardActivity.class));
                 } else {
                     startActivity(new Intent(this, TenantDashboardActivity.class));
                 }
             } else {
-                // Not logged in — show role selection
                 startActivity(new Intent(this, RoleSelectionActivity.class));
             }
             finish();

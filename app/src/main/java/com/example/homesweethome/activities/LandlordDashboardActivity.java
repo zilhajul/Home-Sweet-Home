@@ -2,6 +2,7 @@ package com.example.homesweethome.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -12,59 +13,36 @@ import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
+import com.example.homesweethome.databinding.LandlordDashboardBinding;
 import com.example.homesweethome.utils.UiUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Placeholder for Epic 2 — Landlord Dashboard.
- * Currently shows a welcome screen and logout.
- */
 public class LandlordDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
+    private LandlordDashboardBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sessionManager = new SessionManager(this);
+        binding = LandlordDashboardBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        // Simple placeholder layout
-        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
-        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        layout.setGravity(android.view.Gravity.CENTER);
-        layout.setPadding(48, 48, 48, 48);
-        layout.setBackgroundColor(getColor(R.color.background));
+        sessionManager = new SessionManager(this);
 
         User user = sessionManager.getUser();
 
-        TextView tvWelcome = new TextView(this);
-        tvWelcome.setText("Welcome, " + (user != null ? user.getName() : "Landlord") + "!");
-        tvWelcome.setTextSize(24f);
-        tvWelcome.setTextColor(getColor(R.color.text_primary));
-        tvWelcome.setGravity(android.view.Gravity.CENTER);
 
-        TextView tvSub = new TextView(this);
-        tvSub.setText("Landlord Dashboard\n(Epic 2 — coming next)");
-        tvSub.setTextSize(14f);
-        tvSub.setTextColor(getColor(R.color.text_secondary));
-        tvSub.setGravity(android.view.Gravity.CENTER);
-        tvSub.setPadding(0, 16, 0, 48);
 
-        Button btnLogout = new Button(this);
-        btnLogout.setText("Logout");
-        btnLogout.setOnClickListener(v -> logout());
+        binding.btnLogout.setOnClickListener(v -> logout(v));
 
-        layout.addView(tvWelcome);
-        layout.addView(tvSub);
-        layout.addView(btnLogout);
-
-        setContentView(layout);
     }
 
-    private void logout() {
+    public void logout(View v) {
         RetrofitClient.getInstance().setSessionManager(sessionManager);
         RetrofitClient.getInstance().getAuthService().logout()
                 .enqueue(new Callback<ApiResponse<Void>>() {

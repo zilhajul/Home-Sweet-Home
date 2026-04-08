@@ -17,10 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Placeholder for Epic 2 — Tenant Dashboard.
- * Currently shows a welcome screen and logout.
- */
+
 public class TenantDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;

@@ -67,16 +67,15 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void attemptRegister() {
-        // Clear previous errors
         binding.tilName.setError(null);
-        binding.tilEmail.setError(null);
+
         binding.tilPhone.setError(null);
         binding.tilPassword.setError(null);
         binding.tilConfirmPassword.setError(null);
 
         String name = getText(binding.etName);
-        String email = getText(binding.etEmail);
-        String phone = getText(binding.etPhone);
+
+        String phone = "+88"+ getText(binding.etPhone);
         String password = getText(binding.etPassword);
         String confirmPassword = getText(binding.etConfirmPassword);
 
@@ -86,10 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
             binding.tilName.setError(getString(R.string.error_empty_name));
             hasError = true;
         }
-        if (!ValidationUtils.isValidEmail(email)) {
-            binding.tilEmail.setError(getString(R.string.error_invalid_email));
-            hasError = true;
-        }
+
         if (!ValidationUtils.isValidPhone(phone)) {
             binding.tilPhone.setError(getString(R.string.error_invalid_phone));
             hasError = true;
@@ -112,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         UiUtils.showLoading(binding.progressBar, binding.btnRegister);
 
-        RegisterRequest request = new RegisterRequest(name, email, phone, password, confirmPassword, role);
+        RegisterRequest request = new RegisterRequest(name, phone, password);
         RetrofitClient.getInstance().getAuthService().register(request)
                 .enqueue(new Callback<ApiResponse<User>>() {
                     @Override
@@ -127,6 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 UiUtils.showSuccess(binding.getRoot(),
                                         getString(R.string.success_register));
                                 navigateToDashboard(apiResponse.getData());
+                                finish();
                             } else {
                                 UiUtils.showError(binding.getRoot(),
                                         apiResponse.getMessage() != null

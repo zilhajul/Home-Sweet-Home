@@ -34,7 +34,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private static final long COUNTDOWN_TICK = 1_000L;
 
     private ActivityOtpVerificationBinding binding;
-    private String email;
+    private String number;
     private String role;
     private CountDownTimer countDownTimer;
 
@@ -46,15 +46,15 @@ public class OtpVerificationActivity extends AppCompatActivity {
         binding = ActivityOtpVerificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        email = getIntent().getStringExtra(EXTRA_EMAIL);
+        number = getIntent().getStringExtra(EXTRA_EMAIL);
         role  = getIntent().getStringExtra(EXTRA_ROLE);
 
         binding.tvSubtitle.setText(
-                getString(R.string.otp_subtitle, email != null ? email : "your email"));
+                getString(R.string.otp_subtitle, number != null ? number : "your number"));
 
         otpBoxes = new EditText[]{
                 binding.etOtp1, binding.etOtp2, binding.etOtp3,
-                binding.etOtp4, binding.etOtp5, binding.etOtp6
+                binding.etOtp4
         };
 
         setupOtpBoxes();
@@ -105,7 +105,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    // ── Countdown timer ────────────────────────────────────────────────────
     private void startCountdown() {
         binding.tvTimer.setVisibility(View.VISIBLE);
         binding.llResend.setVisibility(View.GONE);
@@ -132,12 +131,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
             return;
         }
 
-        // Clear boxes
         for (EditText box : otpBoxes) box.setText("");
         otpBoxes[0].requestFocus();
 
         Map<String, String> body = new HashMap<>();
-        body.put("email", email);
+        body.put("number", number);
         body.put("role", role);
 
         RetrofitClient.getInstance().getAuthService().forgotPassword(body)
@@ -156,11 +154,10 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 });
     }
 
-    // ── Verify ─────────────────────────────────────────────────────────────
     private void attemptVerify() {
         String otp = getOtpValue();
 
-        if (otp.length() != 6) {
+        if (otp.length() != 4) {
             UiUtils.showError(binding.getRoot(), getString(R.string.error_invalid_otp));
             return;
         }
@@ -173,8 +170,8 @@ public class OtpVerificationActivity extends AppCompatActivity {
         UiUtils.showLoading(binding.progressBar, binding.btnVerify);
 
         Map<String, String> body = new HashMap<>();
-        body.put("email", email);
-        body.put("otp", otp);
+        body.put("landlord_phone", number);
+        body.put("forgot_password_otp", otp);
 
         RetrofitClient.getInstance().getAuthService().verifyOtp(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
@@ -187,7 +184,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                                 && response.body().isSuccess()) {
                             Intent intent = new Intent(OtpVerificationActivity.this,
                                     ResetPasswordActivity.class);
-                            intent.putExtra(ResetPasswordActivity.EXTRA_EMAIL, email);
+                            intent.putExtra(ResetPasswordActivity.EXTRA_EMAIL, number);
                             intent.putExtra(ResetPasswordActivity.EXTRA_OTP, otp);
                             startActivity(intent);
                         } else {
