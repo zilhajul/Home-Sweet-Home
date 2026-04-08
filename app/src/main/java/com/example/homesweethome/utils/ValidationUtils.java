@@ -17,8 +17,7 @@ public class ValidationUtils {
     public static boolean isValidPhone(String phone) {
         if (phone == null || phone.trim().isEmpty()) return false;
         String cleaned = phone.replaceAll("[\\s\\-()]", "");
-        return cleaned.length() >= 10 && cleaned.length() <= 15
-                && cleaned.matches("[+]?[0-9]+");
+        return cleaned.length() == 14 && cleaned.matches("[+]?[0-9]+");
     }
 
     public static boolean isNotEmpty(String value) {

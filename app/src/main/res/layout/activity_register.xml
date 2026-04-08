@@ -17,7 +17,7 @@
             android:id="@+id/btn_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,9 +49,10 @@
             android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_role_badge"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_role_badge"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+           />
 
         <TextView
             android:id="@+id/tv_subtitle"
@@ -61,8 +62,8 @@
             android:textColor="@color/text_secondary"
             android:textSize="16sp"
             android:layout_marginTop="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_title"
+
             app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
         <!-- Full Name -->
@@ -74,9 +75,11 @@
             android:hint="@string/full_name_hint"
             android:layout_marginTop="32dp"
             app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
+            app:layout_constraintTop_toBottomOf="@+id/tv_subtitle"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_subtitle"
+            app:layout_constraintRight_toRightOf="parent"
+
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_name"
@@ -88,26 +91,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_email"
-            style="@style/Widget.HomeSweetHome.TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/email_hint"
-            android:layout_marginTop="16dp"
-            app:startIconDrawable="@android:drawable/ic_dialog_email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_name">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:imeOptions="actionNext"
-                android:singleLine="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Phone -->
         <com.google.android.material.textfield.TextInputLayout
@@ -118,9 +102,10 @@
             android:hint="@string/phone_hint"
             android:layout_marginTop="16dp"
             app:startIconDrawable="@android:drawable/ic_menu_call"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_email">
+            app:layout_constraintTop_toBottomOf="@id/til_name"
+            app:layout_constraintLeft_toLeftOf="@+id/til_name"
+            app:layout_constraintRight_toRightOf="parent"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_phone"
@@ -236,6 +221,7 @@
                 android:id="@+id/tv_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:text="@string/sign_in"
                 android:textColor="@color/primary"
                 android:textSize="15sp"

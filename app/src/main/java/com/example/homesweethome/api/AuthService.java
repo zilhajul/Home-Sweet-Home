@@ -4,6 +4,7 @@ import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
 import com.example.homesweethome.model.Subscription;
+import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.User;
 
 import java.util.List;
@@ -16,16 +17,16 @@ import retrofit2.http.POST;
 
 public interface AuthService {
 
-    @POST("auth/login")
-    Call<ApiResponse<User>> login(@Body LoginRequest request);
+    @POST("landlords/login")
+    Call<ApiResponse<SignInResponse>> login(@Body LoginRequest request);
 
-    @POST("auth/register")
+    @POST("landlords")
     Call<ApiResponse<User>> register(@Body RegisterRequest request);
 
     @POST("auth/logout")
     Call<ApiResponse<Void>> logout();
 
-    @POST("auth/forgot-password")
+    @POST("landlords/forgot_password_otp")
     Call<ApiResponse<Void>> forgotPassword(@Body Map<String, String> body);
 
     @POST("auth/verify-otp")
