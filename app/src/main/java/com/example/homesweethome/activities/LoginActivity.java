@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intent;
         if ("landlord".equalsIgnoreCase(role)) {
-            intent = new Intent(this, LandlordDashboardActivity.class);
+            intent = new Intent(this, SubscriptionActivity.class);
         } else {
             intent = new Intent(this, TenantDashboardActivity.class);
         }

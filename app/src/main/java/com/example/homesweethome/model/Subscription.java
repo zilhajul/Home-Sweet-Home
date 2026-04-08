@@ -1,8 +1,6 @@
 package com.example.homesweethome.model;
 
-/**
- * Model class representing a Subscription plan from the API.
- */
+
 public class Subscription {
 
     private String id;

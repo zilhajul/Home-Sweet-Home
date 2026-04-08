@@ -6,25 +6,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0D0F1A"
-    tools:context=".SubscriptionActivity">
+    tools:context=".activities.SubscriptionActivity">
 
     <!-- Top AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="transparent"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="transparent"
+            android:background="@android:color/transparent"
             app:title="Choose Your Plan"
             app:titleTextColor="#FFFFFF"
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="@drawable/arrow_back"
             app:navigationIconTint="#FFFFFF" />
 
     </com.google.android.material.appbar.AppBarLayout>
