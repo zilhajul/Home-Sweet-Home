@@ -34,8 +34,6 @@ public class Subscription {
     @SerializedName("updatedAt")
     private String updatedAt;
 
-    // ─── Constructors ──────────────────────────────────────────────────────────
-
     public Subscription() {}
 
     public Subscription(String id,
