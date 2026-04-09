@@ -1,17 +1,37 @@
 package com.example.homesweethome.model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Subscription {
 
+    @SerializedName("_id")
     private String id;
+
+    @SerializedName("subscription_name")
     private String subscriptionName;
+
+    @SerializedName("subscription_status")
     private String subscriptionStatus;
+
+    @SerializedName("subscription_description")
     private String subscriptionDescription;
+
+    @SerializedName("subscription_price")
     private double subscriptionPrice;
+    @SerializedName("subscription_duration")
     private int subscriptionDuration;
+
+    @SerializedName("building_add_max_number")
     private int buildingAddMaxNumber;
+
+    @SerializedName("flat_add_max_number")
     private int flatAddMaxNumber;
+
+    @SerializedName("createdAt")
     private String createdAt;
+
+    @SerializedName("updatedAt")
     private String updatedAt;
 
     // ─── Constructors ──────────────────────────────────────────────────────────
