@@ -3,13 +3,16 @@ package com.example.homesweethome.api;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
+import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface AuthService {
@@ -26,9 +29,12 @@ public interface AuthService {
     @POST("landlords/forgot_password_otp")
     Call<ApiResponse<Void>> forgotPassword(@Body Map<String, String> body);
 
-    @POST("auth/verify-otp")
+    @POST("landlords/verify_otp")
     Call<ApiResponse<Void>> verifyOtp(@Body Map<String, String> body);
 
-    @POST("auth/reset-password")
+    @POST("/landlords/update_password")
     Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
+
+    @GET("subscriptions")
+    Call<ApiResponse<List<Subscription>>> getSubscriptions();
 }

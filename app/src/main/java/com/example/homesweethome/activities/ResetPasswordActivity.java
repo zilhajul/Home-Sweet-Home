@@ -26,7 +26,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     public static final String EXTRA_OTP   = "extra_otp";
 
     private ActivityResetPasswordBinding binding;
-    private String email;
+    private String number;
     private String otp;
 
     @Override
@@ -35,7 +35,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         binding = ActivityResetPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        email = getIntent().getStringExtra(EXTRA_EMAIL);
+        number = getIntent().getStringExtra(EXTRA_EMAIL);
         otp   = getIntent().getStringExtra(EXTRA_OTP);
 
         binding.btnBack.setOnClickListener(v -> finish());
@@ -44,10 +44,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     private void attemptReset() {
         binding.tilNewPassword.setError(null);
-        binding.tilConfirmPassword.setError(null);
 
         String newPass     = getText(binding.etNewPassword);
-        String confirmPass = getText(binding.etConfirmPassword);
 
         boolean hasError = false;
 
@@ -55,10 +53,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             binding.tilNewPassword.setError(getString(R.string.error_short_password));
             hasError = true;
         }
-        if (!ValidationUtils.passwordsMatch(newPass, confirmPass)) {
-            binding.tilConfirmPassword.setError(getString(R.string.error_password_mismatch));
-            hasError = true;
-        }
+
 
         if (hasError) return;
 
@@ -70,10 +65,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
         UiUtils.showLoading(binding.progressBar, binding.btnReset);
 
         Map<String, String> body = new HashMap<>();
-        body.put("email", email);
-        body.put("otp", otp);
-        body.put("password", newPass);
-        body.put("password_confirmation", confirmPass);
+        body.put("landlord_phone", number);
+
+        body.put("landlord_password", newPass);
+
 
         RetrofitClient.getInstance().getAuthService().resetPassword(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {

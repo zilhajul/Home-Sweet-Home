@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -17,7 +18,9 @@ import com.example.homesweethome.databinding.ActivityOtpVerificationBinding;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.utils.NetworkUtils;
 import com.example.homesweethome.utils.UiUtils;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +31,12 @@ import retrofit2.Response;
 public class OtpVerificationActivity extends AppCompatActivity {
 
     public static final String EXTRA_EMAIL = "extra_email";
-    public static final String EXTRA_ROLE  = "extra_role";
 
     private static final long COUNTDOWN_MS   = 60_000L;
     private static final long COUNTDOWN_TICK = 1_000L;
 
     private ActivityOtpVerificationBinding binding;
     private String number;
-    private String role;
     private CountDownTimer countDownTimer;
 
     private EditText[] otpBoxes;
@@ -47,7 +48,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         number = getIntent().getStringExtra(EXTRA_EMAIL);
-        role  = getIntent().getStringExtra(EXTRA_ROLE);
 
         binding.tvSubtitle.setText(
                 getString(R.string.otp_subtitle, number != null ? number : "your number"));
@@ -65,7 +65,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         binding.btnVerify.setOnClickListener(v -> attemptVerify());
     }
 
-    // ── OTP boxes: auto-advance and backspace handling ─────────────────────
     private void setupOtpBoxes() {
         for (int i = 0; i < otpBoxes.length; i++) {
             final int index = i;
@@ -100,9 +99,13 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private String getOtpValue() {
         StringBuilder sb = new StringBuilder();
         for (EditText box : otpBoxes) {
-            sb.append(box.getText().toString().trim());
+            String value = box.getText().toString().trim();
+            sb.append(value);
+            Log.d("OtpVerification", "OTP Box value: '" + value + "' (length: " + value.length() + ")");
         }
-        return sb.toString();
+        String otp = sb.toString();
+        Log.d("OtpVerification", "Final OTP: '" + otp + "' (total length: " + otp.length() + ")");
+        return otp;
     }
 
     private void startCountdown() {
@@ -113,7 +116,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 long secs = millisUntilFinished / 1000;
-                binding.tvTimer.setText(getString(R.string.loading) + " " + secs + "s");
                 binding.tvTimer.setText("Resend in " + secs + "s");
             }
 
@@ -135,8 +137,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         otpBoxes[0].requestFocus();
 
         Map<String, String> body = new HashMap<>();
-        body.put("number", number);
-        body.put("role", role);
+        body.put("landlord_phone", number);
 
         RetrofitClient.getInstance().getAuthService().forgotPassword(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
@@ -149,6 +150,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+
                         UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
                     }
                 });
@@ -158,7 +160,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         String otp = getOtpValue();
 
         if (otp.length() != 4) {
-            UiUtils.showError(binding.getRoot(), getString(R.string.error_invalid_otp));
+            UiUtils.showError(binding.getRoot(), "OTP must be 4 digits");
             return;
         }
 
@@ -180,22 +182,35 @@ public class OtpVerificationActivity extends AppCompatActivity {
                                            Response<ApiResponse<Void>> response) {
                         UiUtils.hideLoading(binding.progressBar, binding.btnVerify);
 
-                        if (response.isSuccessful() && response.body() != null
-                                && response.body().isSuccess()) {
-                            Intent intent = new Intent(OtpVerificationActivity.this,
-                                    ResetPasswordActivity.class);
-                            intent.putExtra(ResetPasswordActivity.EXTRA_EMAIL, number);
-                            intent.putExtra(ResetPasswordActivity.EXTRA_OTP, otp);
-                            startActivity(intent);
+                        Log.d("OtpVerification", "Final OTP: '" + otp + "'");
+                        Log.d("OtpVerification", "Phone: " + number);
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            ApiResponse<Void> apiResponse = response.body();
+
+                            if (apiResponse.isSuccess()) {
+                                Intent intent = new Intent(OtpVerificationActivity.this,
+                                        ResetPasswordActivity.class);
+                                intent.putExtra(ResetPasswordActivity.EXTRA_EMAIL, number);
+                                intent.putExtra(ResetPasswordActivity.EXTRA_OTP, otp);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                UiUtils.showError(binding.getRoot(), apiResponse.getMessage());
+                            }
                         } else {
-                            String msg = response.body() != null
-                                    ? response.body().getMessage() : getString(R.string.error_generic);
-                            UiUtils.showError(binding.getRoot(), msg);
+                            ApiResponse<Void> errorResponse = parseErrorResponse(response);
+                            if (errorResponse != null) {
+                                UiUtils.showError(binding.getRoot(), errorResponse.getMessage());
+                            } else {
+                                UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+
                         UiUtils.hideLoading(binding.progressBar, binding.btnVerify);
                         UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
                     }
@@ -206,5 +221,21 @@ public class OtpVerificationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (countDownTimer != null) countDownTimer.cancel();
+    }
+
+    
+    private ApiResponse<Void> parseErrorResponse(Response<?> response) {
+        try {
+            if (response.errorBody() != null) {
+                String errorBody = response.errorBody().string();
+                Gson gson = new Gson();
+                return gson.fromJson(errorBody, ApiResponse.class);
+            }
+        } catch (IOException e) {
+            Log.e("OtpVerification", "Error parsing error body: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e("OtpVerification", "Exception parsing error response: " + e.getMessage());
+        }
+        return null;
     }
 }

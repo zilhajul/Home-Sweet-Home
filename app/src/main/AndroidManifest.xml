@@ -65,6 +65,11 @@
             android:name=".activities.TenantDashboardActivity"
             android:exported="false" />
 
+        <!-- Subscription Activity -->
+        <activity
+            android:name=".activities.SubscriptionActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
