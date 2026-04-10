@@ -65,7 +65,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         Map<String, String> body = new HashMap<>();
         body.put("landlord_phone", number);
-        body.put("role", "landlord");
+
 
         
         Log.d("ForgotPassword", "Sending request with body: " + body.toString());
@@ -92,7 +92,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 Intent intent = new Intent(ForgotPasswordActivity.this,
                                         OtpVerificationActivity.class);
                                 intent.putExtra(OtpVerificationActivity.EXTRA_EMAIL, number);
-                                intent.putExtra(OtpVerificationActivity.EXTRA_ROLE, "landlord");
                                 startActivity(intent);
                                 finish();
                             } else {
