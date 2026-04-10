@@ -29,10 +29,10 @@ public interface AuthService {
     @POST("landlords/forgot_password_otp")
     Call<ApiResponse<Void>> forgotPassword(@Body Map<String, String> body);
 
-    @POST("auth/verify-otp")
+    @POST("landlords/verify_otp")
     Call<ApiResponse<Void>> verifyOtp(@Body Map<String, String> body);
 
-    @POST("auth/reset-password")
+    @POST("/landlords/update_password")
     Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
 
     @GET("subscriptions")
