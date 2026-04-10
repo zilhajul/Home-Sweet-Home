@@ -30,9 +30,9 @@ public interface AuthService {
     Call<ApiResponse<Void>> forgotPassword(@Body Map<String, String> body);
 
     @POST("landlords/verify_otp")
-    Call<ApiResponse<Void>> verifyOtp(@Body Map<String, String> body);
+    Call<ApiResponse<Void>> verifyOtp(@Body Map<String, Object> body);
 
-    @POST("/landlords/update_password")
+    @POST("landlords/update_password")
     Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
 
     @GET("subscriptions")

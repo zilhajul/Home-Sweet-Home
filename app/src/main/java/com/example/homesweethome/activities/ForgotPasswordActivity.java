@@ -70,7 +70,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         
         Log.d("ForgotPassword", "Sending request with body: " + body.toString());
 
-        RetrofitClient.getInstance().getAuthService().forgotPassword(body)
+        RetrofitClient.getInstance(this).getAuthService().forgotPassword(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Void>> call,
