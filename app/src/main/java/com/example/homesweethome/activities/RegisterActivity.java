@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
         UiUtils.showLoading(binding.progressBar, binding.btnRegister);
 
         RegisterRequest request = new RegisterRequest(name, phone, password);
-        RetrofitClient.getInstance().getAuthService().register(request)
+        RetrofitClient.getInstance(this).getAuthService().register(request)
                 .enqueue(new Callback<ApiResponse<User>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<User>> call,
