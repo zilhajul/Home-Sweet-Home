@@ -1,5 +1,7 @@
 package com.example.homesweethome.api;
 
+import android.content.Context;
+
 import com.example.homesweethome.preferences.SessionManager;
 
 import okhttp3.OkHttpClient;
@@ -19,7 +21,12 @@ public class RetrofitClient {
     private final Retrofit retrofit;
     private SessionManager sessionManager;
 
-    private RetrofitClient() {
+    private RetrofitClient(Context context) {
+
+        if (sessionManager == null) {
+            sessionManager = new SessionManager(context);
+        }
+
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -49,9 +56,9 @@ public class RetrofitClient {
                 .build();
     }
 
-    public static synchronized RetrofitClient getInstance() {
+    public static synchronized RetrofitClient getInstance(Context context) {
         if (instance == null) {
-            instance = new RetrofitClient();
+            instance = new RetrofitClient(context);
         }
         return instance;
     }

@@ -36,7 +36,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         number = getIntent().getStringExtra(EXTRA_EMAIL);
-        otp   = getIntent().getStringExtra(EXTRA_OTP);
 
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnReset.setOnClickListener(v -> attemptReset());
@@ -45,7 +44,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private void attemptReset() {
         binding.tilNewPassword.setError(null);
 
-        String newPass     = getText(binding.etNewPassword);
+        String newPass  = getText(binding.etNewPassword);
 
         boolean hasError = false;
 
@@ -70,7 +69,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         body.put("landlord_password", newPass);
 
 
-        RetrofitClient.getInstance().getAuthService().resetPassword(body)
+        RetrofitClient.getInstance(this).getAuthService().resetPassword(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Void>> call,

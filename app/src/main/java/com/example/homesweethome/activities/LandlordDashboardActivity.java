@@ -43,8 +43,8 @@ public class LandlordDashboardActivity extends AppCompatActivity {
     }
 
     public void logout(View v) {
-        RetrofitClient.getInstance().setSessionManager(sessionManager);
-        RetrofitClient.getInstance().getAuthService().logout()
+        RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+        RetrofitClient.getInstance(this).getAuthService().logout()
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Void>> call,

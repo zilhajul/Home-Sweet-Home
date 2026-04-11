@@ -74,7 +74,7 @@ public class SubscriptionActivity extends AppCompatActivity
     }
 
     private void initAuthService() {
-        authService = RetrofitClient.getInstance().getAuthService();
+        authService = RetrofitClient.getInstance(this).getAuthService();
     }
 
     private void fetchSubscriptions() {

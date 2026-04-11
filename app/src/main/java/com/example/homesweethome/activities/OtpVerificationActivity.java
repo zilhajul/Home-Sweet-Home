@@ -139,7 +139,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         Map<String, String> body = new HashMap<>();
         body.put("landlord_phone", number);
 
-        RetrofitClient.getInstance().getAuthService().forgotPassword(body)
+        RetrofitClient.getInstance(this).getAuthService().forgotPassword(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Void>> call,
@@ -171,11 +171,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
         UiUtils.showLoading(binding.progressBar, binding.btnVerify);
 
-        Map<String, String> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
         body.put("landlord_phone", number);
-        body.put("forgot_password_otp", otp);
+        body.put("forgot_password_otp", Integer.parseInt(otp));
 
-        RetrofitClient.getInstance().getAuthService().verifyOtp(body)
+        RetrofitClient.getInstance(this).getAuthService().verifyOtp(body)
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Void>> call,
@@ -192,7 +192,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
                                 Intent intent = new Intent(OtpVerificationActivity.this,
                                         ResetPasswordActivity.class);
                                 intent.putExtra(ResetPasswordActivity.EXTRA_EMAIL, number);
-                                intent.putExtra(ResetPasswordActivity.EXTRA_OTP, otp);
                                 startActivity(intent);
                                 finish();
                             } else {

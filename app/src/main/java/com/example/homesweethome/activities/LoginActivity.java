@@ -119,8 +119,8 @@ public class LoginActivity extends AppCompatActivity {
         if(role!=null && role.equalsIgnoreCase("landlord")){
 
             LoginRequest request = new LoginRequest(number, password);
-            RetrofitClient.getInstance().setSessionManager(sessionManager);
-            RetrofitClient.getInstance().getAuthService().login(request)
+            RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+            RetrofitClient.getInstance(this).getAuthService().login(request)
                     .enqueue(new Callback<ApiResponse<SignInResponse>>() {
                         @Override
                         public void onResponse(@NonNull Call<ApiResponse<SignInResponse>> call,
