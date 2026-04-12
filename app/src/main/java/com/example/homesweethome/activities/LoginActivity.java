@@ -1,6 +1,7 @@
 package com.example.homesweethome.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.TenantLoginRequest;
+import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
 import com.example.homesweethome.utils.NetworkUtils;
 import com.example.homesweethome.utils.UiUtils;
@@ -257,28 +259,70 @@ public class LoginActivity extends AppCompatActivity {
     private void onLoginSuccess(SignInResponse response) {
         Log.d("LoginActivity", "onLoginSuccess called with token: " + response.getToken());
         
+        // Store token temporarily in SessionManager
         sessionManager.saveSelectedRole(role);
         
-
-        Log.d("LoginActivity", "Toast displayed - duration: LONG");
-        
-//        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
-//                () -> Log.d("LoginActivity", "Ready for next action (e.g., dashboard navigation)"),
-//                2000);
-        
-
-        Intent intent;
         if ("landlord".equalsIgnoreCase(role)) {
-
-            intent = new Intent(this, SubscriptionActivity.class);
+            // For landlord: fetch landlord info and then proceed
+            fetchLandlordInfo(response.getToken());
         } else {
-            intent = new Intent(this, TenantDashboardActivity.class);
+            // For tenant: proceed directly to dashboard
+            Intent intent = new Intent(this, TenantDashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         }
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+    }
 
+    private void fetchLandlordInfo(String token) {
+        Log.d("LoginActivity", "Fetching landlord information with token");
 
+        SharedPreferences prefs = getSharedPreferences("house_rent_session", MODE_PRIVATE);
+        prefs.edit().putString("auth_token", token).apply();
+        
+        RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+        
+        RetrofitClient.getInstance(this).getAuthService().getLandlord()
+                .enqueue(new Callback<ApiResponse<User>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<User>> call,
+                                         @NonNull Response<ApiResponse<User>> response) {
+                        Log.d("LoginActivity", "=== Landlord Info Response ===");
+                        Log.d("LoginActivity", "isSuccessful: " + response.isSuccessful());
+                        
+                        if (!response.isSuccessful()) {
+                            Log.e("LoginActivity", "Failed to fetch landlord info: HTTP " + response.code());
+                            UiUtils.showError(binding.getRoot(), "Failed to fetch landlord information");
+                            return;
+                        }
+                        
+                        if (response.body() == null || response.body().getData() == null) {
+                            Log.e("LoginActivity", "Landlord info response is null");
+                            UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                            return;
+                        }
+                        
+                        User landlordUser = response.body().getData();
+                        Log.d("LoginActivity", "Landlord info fetched successfully: " + landlordUser.getName());
+                        
+                        // Save complete landlord info to SessionManager
+                        landlordUser.setToken(token);
+                        sessionManager.saveSession(landlordUser);
+                        
+                        // Navigate to subscription screen
+                        Intent intent = new Intent(LoginActivity.this, SubscriptionActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                    
+                    @Override
+                    public void onFailure(@NonNull Call<com.example.homesweethome.model.ApiResponse<com.example.homesweethome.model.User>> call,
+                                         @NonNull Throwable t) {
+                        Log.e("LoginActivity", "Failed to fetch landlord info: " + t.getMessage(), t);
+                        UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
+                    }
+                });
     }
 
 

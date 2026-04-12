@@ -39,6 +39,9 @@ public interface AuthService {
     @POST("landlords/update_password")
     Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
 
+    @GET("landlords")
+    Call<ApiResponse<User>> getLandlord();
+
     @GET("subscriptions")
     Call<ApiResponse<List<Subscription>>> getSubscriptions();
 }
