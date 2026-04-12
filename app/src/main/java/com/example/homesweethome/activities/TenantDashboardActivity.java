@@ -21,42 +21,23 @@ import retrofit2.Response;
 public class TenantDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
+    private TextView tvWelcome;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tenant_dashboard);
+
         sessionManager = new SessionManager(this);
 
-        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
-        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        layout.setGravity(android.view.Gravity.CENTER);
-        layout.setPadding(48, 48, 48, 48);
-        layout.setBackgroundColor(getColor(R.color.background));
+        tvWelcome = findViewById(R.id.tvWelcome);
+        btnLogout = findViewById(R.id.btnLogout);
 
         User user = sessionManager.getUser();
-
-        TextView tvWelcome = new TextView(this);
         tvWelcome.setText("Welcome, " + (user != null ? user.getName() : "Tenant") + "!");
-        tvWelcome.setTextSize(24f);
-        tvWelcome.setTextColor(getColor(R.color.text_primary));
-        tvWelcome.setGravity(android.view.Gravity.CENTER);
 
-        TextView tvSub = new TextView(this);
-        tvSub.setText("Tenant Dashboard\n(Epic 2 — coming next)");
-        tvSub.setTextSize(14f);
-        tvSub.setTextColor(getColor(R.color.text_secondary));
-        tvSub.setGravity(android.view.Gravity.CENTER);
-        tvSub.setPadding(0, 16, 0, 48);
-
-        Button btnLogout = new Button(this);
-        btnLogout.setText("Logout");
         btnLogout.setOnClickListener(v -> logout());
-
-        layout.addView(tvWelcome);
-        layout.addView(tvSub);
-        layout.addView(btnLogout);
-
-        setContentView(layout);
     }
 
     private void logout() {

@@ -72,4 +72,9 @@
     <string name="success_register">Account created successfully!</string>
     <string name="success_reset">Password reset successfully!</string>
 
+    <!-- Tenant Dashboard -->
+    <string name="welcome_tenant">Welcome, Tenant!</string>
+    <string name="tenant_dashboard_subtitle">Tenant Dashboard\n(Epic 2 — coming next)</string>
+    <string name="logout">Logout</string>
+
 </resources>

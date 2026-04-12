@@ -15,6 +15,7 @@ import com.example.homesweethome.databinding.ActivityLoginBinding;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.SignInResponse;
+import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.preferences.SessionManager;
 import com.example.homesweethome.utils.NetworkUtils;
 import com.example.homesweethome.utils.UiUtils;
@@ -120,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
             LoginRequest request = new LoginRequest(number, password);
             RetrofitClient.getInstance(this).setSessionManager(sessionManager);
-            RetrofitClient.getInstance(this).getAuthService().login(request)
+            RetrofitClient.getInstance(this).getAuthService().landlordLogin(request)
                     .enqueue(new Callback<ApiResponse<SignInResponse>>() {
                         @Override
                         public void onResponse(@NonNull Call<ApiResponse<SignInResponse>> call,
@@ -183,6 +184,72 @@ public class LoginActivity extends AppCompatActivity {
                             UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
                         }
                     });
+        }else {
+            TenantLoginRequest request = new TenantLoginRequest(number, password);
+            RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+            RetrofitClient.getInstance(this).getAuthService().tenantLogin(request)
+                    .enqueue(new Callback<ApiResponse<SignInResponse>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<SignInResponse>> call,
+                                               @NonNull Response<ApiResponse<SignInResponse>> response) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnLogin);
+
+                            Log.d("LoginActivity", "=== onResponse START ===");
+                            Log.d("LoginActivity", "isSuccessful: " + response.isSuccessful());
+                            Log.d("LoginActivity", "Response code: " + response.code());
+                            Log.d("LoginActivity", "Body is null: " + (response.body() == null));
+
+                            if (!response.isSuccessful()) {
+                                Log.d("LoginActivity", "Response is not successful (status code not 2xx)");
+                                try {
+                                    if (response.errorBody() != null) {
+                                        String errorBody = response.errorBody().string();
+                                        Log.d("LoginActivity", "Error body: " + errorBody);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("LoginActivity", "Error reading error body", e);
+                                }
+                                UiUtils.showError(binding.getRoot(), "HTTP Error: " + response.code());
+                                return;
+                            }
+
+                            if (response.body() == null) {
+                                Log.d("LoginActivity", "Response body is null");
+                                UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                                return;
+                            }
+
+                            ApiResponse<SignInResponse> apiResponse = response.body();
+                            Log.d("LoginActivity", "API success field: " + apiResponse.isSuccess());
+                            Log.d("LoginActivity", "API message: " + apiResponse.getMessage());
+                            Log.d("LoginActivity", "API data is null: " + (apiResponse.getData() == null));
+
+                            if (apiResponse.getData() != null) {
+                                Log.d("LoginActivity", "Token: " + apiResponse.getData().getToken());
+                            }
+
+                            if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                                Log.d("LoginActivity", "SUCCESS - Calling onLoginSuccess");
+                                Toast successToast = Toast.makeText(LoginActivity.this, "✓ Login Successful!", Toast.LENGTH_LONG);
+                                successToast.show();
+                                onLoginSuccess(apiResponse.getData());
+                            } else {
+                                Log.d("LoginActivity", "FAILED - success=" + apiResponse.isSuccess() + ", data=" + (apiResponse.getData() != null));
+                                UiUtils.showError(binding.getRoot(),
+                                        apiResponse.getMessage() != null
+                                                ? apiResponse.getMessage()
+                                                : getString(R.string.error_generic));
+                            }
+                            Log.d("LoginActivity", "=== onResponse END ===");
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<SignInResponse>> call, @NonNull Throwable t) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnLogin);
+                            Log.e("LoginActivity", "API call failed: " + t.getMessage(), t);
+                            UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
+                        }
+                    });
         }
 
     }
@@ -195,13 +262,14 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.d("LoginActivity", "Toast displayed - duration: LONG");
         
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
-                () -> Log.d("LoginActivity", "Ready for next action (e.g., dashboard navigation)"),
-                2000);
+//        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+//                () -> Log.d("LoginActivity", "Ready for next action (e.g., dashboard navigation)"),
+//                2000);
         
 
         Intent intent;
         if ("landlord".equalsIgnoreCase(role)) {
+
             intent = new Intent(this, SubscriptionActivity.class);
         } else {
             intent = new Intent(this, TenantDashboardActivity.class);

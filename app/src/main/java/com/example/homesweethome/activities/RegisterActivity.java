@@ -2,6 +2,7 @@ package com.example.homesweethome.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,8 @@ import com.example.homesweethome.preferences.SessionManager;
 import com.example.homesweethome.utils.NetworkUtils;
 import com.example.homesweethome.utils.UiUtils;
 import com.example.homesweethome.utils.ValidationUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -116,19 +119,23 @@ public class RegisterActivity extends AppCompatActivity {
                                            Response<ApiResponse<User>> response) {
                         UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
 
-                        if (response.isSuccessful() && response.body() != null) {
+                        if (response.body() != null) {
                             ApiResponse<User> apiResponse = response.body();
-                            if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-                                sessionManager.saveSession(apiResponse.getData());
-                                UiUtils.showSuccess(binding.getRoot(),
-                                        getString(R.string.success_register));
-                                navigateToDashboard(apiResponse.getData());
+                            if (apiResponse.isSuccess()) {
+//                                UiUtils.showSuccess(binding.getRoot(), apiResponse.getMessage());
+                                Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                navigateToLogin();
                                 finish();
                             } else {
-                                UiUtils.showError(binding.getRoot(),
-                                        apiResponse.getMessage() != null
-                                                ? apiResponse.getMessage()
-                                                : getString(R.string.error_generic));
+                                Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        } else if (response.errorBody() != null) {
+                            try {
+                                Gson gson = new Gson();
+                                ApiResponse<User> errorResponse = gson.fromJson(response.errorBody().string(), new TypeToken<ApiResponse<User>>(){}.getType());
+                                Toast.makeText(RegisterActivity.this, errorResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
                             }
                         } else {
                             UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
@@ -143,10 +150,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void navigateToDashboard(User user) {
-        Intent intent = user.isLandlord()
-                ? new Intent(this, LandlordDashboardActivity.class)
-                : new Intent(this, TenantDashboardActivity.class);
+    private void navigateToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra(LoginActivity.EXTRA_ROLE, role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

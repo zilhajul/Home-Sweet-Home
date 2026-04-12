@@ -5,6 +5,7 @@ import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
 import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
+import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.User;
 
 import java.util.List;
@@ -18,7 +19,10 @@ import retrofit2.http.POST;
 public interface AuthService {
 
     @POST("landlords/login")
-    Call<ApiResponse<SignInResponse>> login(@Body LoginRequest request);
+    Call<ApiResponse<SignInResponse>> landlordLogin(@Body LoginRequest request);
+
+    @POST("tenants/login")
+    Call<ApiResponse<SignInResponse>> tenantLogin(@Body TenantLoginRequest request);
 
     @POST("landlords")
     Call<ApiResponse<User>> register(@Body RegisterRequest request);
