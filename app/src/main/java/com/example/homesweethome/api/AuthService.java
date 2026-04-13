@@ -1,6 +1,7 @@
 package com.example.homesweethome.api;
 
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
 import com.example.homesweethome.model.Subscription;
@@ -40,7 +41,7 @@ public interface AuthService {
     Call<ApiResponse<Void>> resetPassword(@Body Map<String, String> body);
 
     @GET("landlords")
-    Call<ApiResponse<User>> getLandlord();
+    Call<ApiResponse<Landlord>> getLandlord();
 
     @GET("subscriptions")
     Call<ApiResponse<List<Subscription>>> getSubscriptions();

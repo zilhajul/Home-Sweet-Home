@@ -14,6 +14,7 @@ import com.example.homesweethome.R;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.databinding.ActivityLoginBinding;
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.TenantLoginRequest;
@@ -283,10 +284,10 @@ public class LoginActivity extends AppCompatActivity {
         RetrofitClient.getInstance(this).setSessionManager(sessionManager);
         
         RetrofitClient.getInstance(this).getAuthService().getLandlord()
-                .enqueue(new Callback<ApiResponse<User>>() {
+                .enqueue(new Callback<ApiResponse<Landlord>>() {
                     @Override
-                    public void onResponse(@NonNull Call<ApiResponse<User>> call,
-                                         @NonNull Response<ApiResponse<User>> response) {
+                    public void onResponse(@NonNull Call<ApiResponse<Landlord>> call,
+                                         @NonNull Response<ApiResponse<Landlord>> response) {
                         Log.d("LoginActivity", "=== Landlord Info Response ===");
                         Log.d("LoginActivity", "isSuccessful: " + response.isSuccessful());
                         
@@ -302,22 +303,30 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         }
                         
-                        User landlordUser = response.body().getData();
-                        Log.d("LoginActivity", "Landlord info fetched successfully: " + landlordUser.getName());
+                        Landlord landlord = response.body().getData();
+                        Log.d("LoginActivity", "Landlord info fetched successfully: " + landlord.getLandlordName());
+                        Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         
-                        // Save complete landlord info to SessionManager
-                        landlordUser.setToken(token);
-                        sessionManager.saveSession(landlordUser);
+                        // Save landlord info to SessionManager
+                        sessionManager.saveLandlordInfo(landlord);
                         
                         // Navigate to subscription screen
-                        Intent intent = new Intent(LoginActivity.this, SubscriptionActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        if (landlord.getSubscriptionPurchase() != null && landlord.getSubscriptionPurchase().getSubscriptionId() != null
+                        && landlord.getSubscriptionPurchase().isPaymentComplete()){
+                            Intent intent = new Intent(LoginActivity.this, LandlordDashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            Intent intent = new Intent(LoginActivity.this, SubscriptionActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                     
                     @Override
-                    public void onFailure(@NonNull Call<com.example.homesweethome.model.ApiResponse<com.example.homesweethome.model.User>> call,
+                    public void onFailure(@NonNull Call<ApiResponse<Landlord>> call,
                                          @NonNull Throwable t) {
                         Log.e("LoginActivity", "Failed to fetch landlord info: " + t.getMessage(), t);
                         UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
