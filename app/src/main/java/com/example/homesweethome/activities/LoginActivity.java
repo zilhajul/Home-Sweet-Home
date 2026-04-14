@@ -308,11 +308,12 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         
                         // Save landlord info to SessionManager
-                        sessionManager.saveLandlordInfo(landlord);
-                        
+
                         // Navigate to subscription screen
                         if (landlord.getSubscriptionPurchase() != null && landlord.getSubscriptionPurchase().getSubscriptionId() != null
                         && landlord.getSubscriptionPurchase().isPaymentComplete()){
+                            sessionManager.saveLandlordInfo(landlord);
+
                             Intent intent = new Intent(LoginActivity.this, LandlordDashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
