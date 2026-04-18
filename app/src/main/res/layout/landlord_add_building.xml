@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f9fa"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ========== Header Section ========== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:background="@drawable/gradient_premium_blue">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/arrow_back"
+                android:scaleType="centerInside"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Building"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- ========== Form Section ========== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Building Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building Name *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etBuildingName"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter building name"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif" />
+
+            <!-- Building Address -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building Address *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etBuildingAddress"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:hint="Enter building address"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field"
+                android:textSize="14sp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif" />
+
+            <!-- Building Status -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building Status *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerBuildingStatus"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input_field"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Building Zone Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Zone Name *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etZoneName"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter zone name"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif" />
+
+            <!-- Building Sub Zone Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sub Zone Name *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etSubZoneName"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter sub zone name"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif" />
+
+            <!-- Building Total Floor -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Floors *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerTotalFloors"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input_field"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Building Total Flat -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Flats *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerTotalFlats"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input_field"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Building Details -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building Details"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etBuildingDetails"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:hint="Enter building details (optional)"
+                android:padding="12dp"
+                android:background="@drawable/bg_input_field"
+                android:textSize="14sp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif" />
+
+            <!-- Building Image -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building Image *"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_input_field"
+                android:padding="16dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_launcher_background"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Image" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:id="@+id/tvBuildingImageName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select building image"
+                        android:textSize="13sp"
+                        android:textColor="#2c3e50"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JPG, PNG allowed"
+                        android:textSize="11sp"
+                        android:textColor="#95a5a6"
+                        android:fontFamily="sans-serif"
+                        android:paddingTop="4dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnBuildingImagePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Browse"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_button_primary"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:stateListAnimator="@null"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Additional Images -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Additional Images"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2c3e50"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:overScrollMode="never"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:id="@+id/llAdditionalImages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical" />
+            </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/btnAddMoreImages"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Add More Images"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_button_secondary"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- Submit Button -->
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Submit Building"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_button_primary"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- Cancel Button -->
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Cancel"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#e74c3c"
+                android:background="@drawable/bg_button_outline_red"
+                android:fontFamily="sans-serif-medium" />
+
+        </LinearLayout>
+
+        <!-- Bottom Padding -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+    </LinearLayout>
+</ScrollView>
+

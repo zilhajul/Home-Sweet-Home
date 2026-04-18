@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Landlord {
 
     @SerializedName("_id")
-    private String id;
+    private static String id;
 
     @SerializedName("login_id")
     private String loginId;
@@ -44,7 +44,7 @@ public class Landlord {
 
     // ─── Getters & Setters ──────────────────────────────────────────────────────
 
-    public String getId() { return id; }
+    public static String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
     public String getLoginId() { return loginId; }

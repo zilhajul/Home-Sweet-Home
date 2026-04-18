@@ -364,7 +364,7 @@
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
-                        android:text="Add Property"
+                        android:text="Add Building"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"

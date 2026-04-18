@@ -70,4 +70,8 @@ public class RetrofitClient {
     public AuthService getAuthService() {
         return retrofit.create(AuthService.class);
     }
+
+    public BuildingService getBuildingService() {
+        return retrofit.create(BuildingService.class);
+    }
 }

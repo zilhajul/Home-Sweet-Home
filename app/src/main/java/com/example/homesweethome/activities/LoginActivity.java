@@ -319,7 +319,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }else {
-                            Intent intent = new Intent(LoginActivity.this, SubscriptionActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, LandlordDashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();

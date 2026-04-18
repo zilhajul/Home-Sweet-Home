@@ -36,8 +36,7 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
         User user = sessionManager.getUser();
 
-
-
+        binding.btnAddProperty.setOnClickListener(v -> openAddBuildingActivity());
         binding.btnLogout.setOnClickListener(v -> logout(v));
 
     }
@@ -56,6 +55,11 @@ public class LandlordDashboardActivity extends AppCompatActivity {
                         clearAndGoToRole(); // Clear locally even if API fails
                     }
                 });
+    }
+
+    private void openAddBuildingActivity() {
+        Intent intent = new Intent(this, LandlordAddBuildingActivity.class);
+        startActivity(intent);
     }
 
     private void clearAndGoToRole() {
