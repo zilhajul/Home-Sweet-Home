@@ -6,6 +6,7 @@ import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
 import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
+import com.example.homesweethome.model.SubscriptionPurchaseResponse;
 import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.User;
 
@@ -45,4 +46,7 @@ public interface AuthService {
 
     @GET("subscriptions")
     Call<ApiResponse<List<Subscription>>> getSubscriptions();
+
+    @POST("subscription_purchases")
+    Call<ApiResponse<SubscriptionPurchaseResponse>> purchaseSubscription(@Body Map<String, String> body);
 }
