@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.example.homesweethome'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.homesweethome"
@@ -50,4 +50,5 @@ dependencies {
 
     // Lottie animation (optional loading states)
     implementation 'com.airbnb.android:lottie:6.4.0'
+    implementation libs.activity
 }

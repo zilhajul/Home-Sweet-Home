@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeSweetHome"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".PaymentWebviewActivity"
+            android:exported="false" />
         <!-- Splash Screen -->
         <activity
             android:name=".activities.SplashActivity"
@@ -21,55 +23,49 @@
             android:theme="@style/Theme.HomeSweetHome.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Role Selection -->
+        </activity> <!-- Role Selection -->
         <activity
             android:name=".activities.RoleSelectionActivity"
-            android:exported="false" />
-
-        <!-- Auth Activities -->
+            android:exported="false" /> <!-- Auth Activities -->
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.OtpVerificationActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- Main Activities (placeholder for other epics) -->
-        <activity
-            android:name=".activities.LandlordDashboardActivity"
-            android:exported="false" />
-
+            android:windowSoftInputMode="adjustResize" /> <!-- Main Activities (placeholder for other epics) -->
         <activity
             android:name=".activities.TenantDashboardActivity"
-            android:exported="false" />
-
-        <!-- Subscription Activity -->
+            android:exported="false" /> <!-- Subscription Activity -->
         <activity
             android:name=".activities.SubscriptionActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".activities.LandlordDashboardActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="myapp" android:host="open" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
