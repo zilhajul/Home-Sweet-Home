@@ -1,6 +1,7 @@
 package com.example.homesweethome.api;
 
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.Flat;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
@@ -14,10 +15,14 @@ import com.example.homesweethome.model.User;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface AuthService {
 
@@ -53,4 +58,22 @@ public interface AuthService {
 
     @POST("tenants")
     Call<ApiResponse<User>> tenantRegister(@Body TenantRegisterRequest request);
+
+    @Multipart
+    @POST("flats/landlord")
+    Call<ApiResponse<Flat>> addFlat(
+            @Part("landlord_id") RequestBody landlordId,
+            @Part("building_id") RequestBody buildingId,
+            @Part("flat_name") RequestBody flatName,
+            @Part MultipartBody.Part flatImage,
+            @Part("flat_status") RequestBody flatStatus,
+            @Part List<MultipartBody.Part> flatImages,
+            @Part("flat_detail") RequestBody flatDetail,
+            @Part("floor_number") RequestBody floorNumber,
+            @Part("flat_rent") RequestBody flatRent,
+            @Part("gas_bill") RequestBody gasBill,
+            @Part("electricity_bill") RequestBody electricityBill,
+            @Part("water_bill") RequestBody waterBill,
+            @Part("service_charge") RequestBody serviceCharge
+    );
 }

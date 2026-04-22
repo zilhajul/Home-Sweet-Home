@@ -37,6 +37,7 @@ public class LandlordDashboardActivity extends AppCompatActivity {
         User user = sessionManager.getUser();
 
         binding.btnAddProperty.setOnClickListener(v -> openAddBuildingActivity());
+        binding.btnAddFlat.setOnClickListener(v -> openFlatActivity());
         binding.btnLogout.setOnClickListener(v -> logout(v));
 
     }
@@ -59,6 +60,11 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
     private void openAddBuildingActivity() {
         Intent intent = new Intent(this, LandlordAddBuildingActivity.class);
+        startActivity(intent);
+    }
+
+    private void openFlatActivity() {
+        Intent intent = new Intent(this, LandlordFlatActivity.class);
         startActivity(intent);
     }
 

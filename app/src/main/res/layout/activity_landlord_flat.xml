@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f9fa"
+    android:fillViewport="true"
+    tools:context=".activities.LandlordFlatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/gradient_premium_blue">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/arrow_back"
+                android:scaleType="centerInside"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add Flat"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:paddingStart="16dp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Building ID -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/building_id_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_building_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/building_id_hint"
+            android:inputType="text"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Flat Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flat_name_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_flat_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/flat_name_hint"
+            android:inputType="text"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Flat Image -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_flat_image"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_select_flat_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_flat_image"
+            android:layout_marginBottom="8dp" />
+
+        <ImageView
+            android:id="@+id/iv_flat_image_preview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Flat Status -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flat_status_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_flat_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/flat_status_options"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Flat Images -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_flat_images"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_select_flat_images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_flat_images"
+            android:layout_marginBottom="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_flat_images_preview"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Flat Detail -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flat_detail_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_flat_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/flat_detail_hint"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Floor Number -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/floor_number_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_floor_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/floor_number_options"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Flat Rent -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flat_rent_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_flat_rent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/flat_rent_hint"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Gas Bill -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gas_bill_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_gas_bill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/gas_bill_hint"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Electricity Bill -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/electricity_bill_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_electricity_bill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/electricity_bill_hint"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Water Bill -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/water_bill_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_water_bill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/water_bill_hint"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Service Charge -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/service_charge_hint"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_service_charge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/service_charge_hint"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edittext_rounded_bg"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btn_submit_flat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/submit_flat"
+            android:layout_marginTop="16dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>

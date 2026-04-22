@@ -77,4 +77,37 @@
     <string name="tenant_dashboard_subtitle">Tenant Dashboard\n(Epic 2 — coming next)</string>
     <string name="logout">Logout</string>
 
+    <!-- Landlord Flat -->
+    <string name="building_id_hint">Building ID</string>
+    <string name="flat_name_hint">Flat Name</string>
+    <string name="select_flat_image">Select Flat Image</string>
+    <string name="flat_status_hint">Flat Status</string>
+    <string name="select_flat_images">Select Flat Images</string>
+    <string name="flat_detail_hint">Flat Detail</string>
+    <string name="floor_number_hint">Floor Number</string>
+    <string name="flat_rent_hint">Flat Rent</string>
+    <string name="gas_bill_hint">Gas Bill</string>
+    <string name="electricity_bill_hint">Electricity Bill</string>
+    <string name="water_bill_hint">Water Bill</string>
+    <string name="service_charge_hint">Service Charge</string>
+    <string name="submit_flat">Submit</string>
+
+    <string-array name="flat_status_options">
+        <item>active</item>
+        <item>inactive</item>
+    </string-array>
+
+    <string-array name="floor_number_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
 </resources>
