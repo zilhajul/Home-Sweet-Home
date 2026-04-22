@@ -21,19 +21,19 @@ public class Building {
     @SerializedName("building_status")
     private String buildingStatus;
 
-    @SerializedName("zone_name")
+    @SerializedName("building_zone_name")
     private String zoneName;
 
-    @SerializedName("sub_zone_name")
+    @SerializedName("building_sub_zone_name")
     private String subZoneName;
 
-    @SerializedName("total_floors")
+    @SerializedName("building_total_floor")
     private String totalFloors;
 
-    @SerializedName("total_flats")
+    @SerializedName("building_total_flat")
     private String totalFlats;
 
-    @SerializedName("building_details")
+    @SerializedName("building_detail")
     private String buildingDetails;
 
     @SerializedName("building_image")

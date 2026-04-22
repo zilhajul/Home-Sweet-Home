@@ -76,5 +76,7 @@
     <string name="welcome_tenant">Welcome, Tenant!</string>
     <string name="tenant_dashboard_subtitle">Tenant Dashboard\n(Epic 2 — coming next)</string>
     <string name="logout">Logout</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

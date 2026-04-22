@@ -37,7 +37,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
     private String landlordId;
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int PICK_ADDITIONAL_IMAGES_REQUEST = 2;
-
+    private static final MediaType TEXT_MEDIA_TYPE = MediaType.parse("text/plain");
     // Activity result launchers
     private ActivityResultLauncher<Intent> buildingImageLauncher;
     private ActivityResultLauncher<Intent> additionalImagesLauncher;
@@ -62,6 +62,8 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
             getOnBackPressedDispatcher().onBackPressed();
             return;
         }
+
+
 
         // Setup Spinners
         setupSpinners();
@@ -101,7 +103,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
 
     private void setupSpinners() {
         // Building Status Spinner
-        String[] statusArray = {"Active", "Inactive", "Under Maintenance"};
+        String[] statusArray = {"active", "inactive"};
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, 
             android.R.layout.simple_spinner_item, statusArray);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -266,7 +268,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
         }
 
         // Show loading toast
-        Toast.makeText(this, "Submitting building data...", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Submitting building data...", Toast.LENGTH_SHORT).show();
         
         // Log all data
         android.util.Log.d("LandlordAddBuilding", "Landlord ID: " + landlordId);
@@ -291,7 +293,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
         // Prepare additional images
         java.util.List<MultipartBody.Part> additionalImageParts = new java.util.ArrayList<>();
         for (Uri imageUri : additionalImageUris) {
-            MultipartBody.Part imagePart = prepareFilePart("additional_images", imageUri);
+            MultipartBody.Part imagePart = prepareFilePart("building_images", imageUri);
             if (imagePart != null) {
                 additionalImageParts.add(imagePart);
             }
@@ -302,7 +304,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
                 zoneName, subZoneName, totalFloors, totalFlats, buildingDetails,
                 buildingImagePart, additionalImageParts);
 
-        finish();
+
     }
 
     private void submitBuildingToServer(String landlordId, String buildingName, String buildingAddress,
@@ -310,26 +312,69 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
                                         String totalFloors, String totalFlats, String buildingDetails,
                                         MultipartBody.Part buildingImage, java.util.List<MultipartBody.Part> additionalImages) {
         
+        // Ensure all fields are non-null
+        landlordId = landlordId != null ? landlordId : "";
+        buildingName = buildingName != null ? buildingName : "";
+        buildingAddress = buildingAddress != null ? buildingAddress : "";
+        buildingStatus = buildingStatus != null ? buildingStatus : "";
+        zoneName = zoneName != null ? zoneName : "";
+        subZoneName = subZoneName != null ? subZoneName : "";
+        totalFloors = totalFloors != null ? totalFloors : "";
+        totalFlats = totalFlats != null ? totalFlats : "";
+        buildingDetails = buildingDetails != null ? buildingDetails : "";
+        
+        // Convert string parameters to RequestBody
+        // Update these lines in submitBuildingToServer
+        RequestBody landlordIdBody = RequestBody.create(landlordId, TEXT_MEDIA_TYPE);
+        RequestBody buildingNameBody = RequestBody.create(buildingName, TEXT_MEDIA_TYPE);
+        RequestBody buildingAddressBody = RequestBody.create(buildingAddress, TEXT_MEDIA_TYPE);
+        RequestBody buildingStatusBody = RequestBody.create(buildingStatus, TEXT_MEDIA_TYPE);
+        RequestBody zoneNameBody = RequestBody.create(zoneName, TEXT_MEDIA_TYPE);
+        RequestBody subZoneNameBody = RequestBody.create(subZoneName, TEXT_MEDIA_TYPE);
+        RequestBody totalFloorsBody = RequestBody.create(totalFloors, TEXT_MEDIA_TYPE);
+        RequestBody totalFlatsBody = RequestBody.create(totalFlats, TEXT_MEDIA_TYPE);
+        RequestBody buildingDetailsBody = RequestBody.create(buildingDetails, TEXT_MEDIA_TYPE);
+        
+        // Log what we're sending to the server
+        android.util.Log.d("LandlordAddBuilding", "Sending multipart request to server:");
+        android.util.Log.d("LandlordAddBuilding", "  LandlordID: '" + landlordId + "'");
+        android.util.Log.d("LandlordAddBuilding", "  Name: '" + buildingName + "'");
+        android.util.Log.d("LandlordAddBuilding", "  Address: '" + buildingAddress + "'");
+        android.util.Log.d("LandlordAddBuilding", "  Status: '" + buildingStatus + "'");
+        android.util.Log.d("LandlordAddBuilding", "  Zone: '" + zoneName + "'");
+        android.util.Log.d("LandlordAddBuilding", "  SubZone: '" + subZoneName + "'");
+        android.util.Log.d("LandlordAddBuilding", "  TotalFloors: '" + totalFloors + "'");
+        android.util.Log.d("LandlordAddBuilding", "  TotalFlats: '" + totalFlats + "'");
+        android.util.Log.d("LandlordAddBuilding", "  Details: '" + buildingDetails + "'");
+        android.util.Log.d("LandlordAddBuilding", "  MediaType: " + TEXT_MEDIA_TYPE);
+        
         RetrofitClient.getInstance(this).setSessionManager(sessionManager);
         RetrofitClient.getInstance(this).getBuildingService().addBuilding(
-                landlordId, buildingName, buildingAddress, buildingStatus, zoneName, subZoneName,
-                totalFloors, totalFlats, buildingDetails, buildingImage, additionalImages)
+                landlordIdBody, buildingNameBody, buildingAddressBody, buildingStatusBody, zoneNameBody, subZoneNameBody,
+                totalFloorsBody, totalFlatsBody, buildingDetailsBody, buildingImage, additionalImages)
                 .enqueue(new Callback<ApiResponse<Building>>() {
                     @Override
                     public void onResponse(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Response<ApiResponse<Building>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            android.util.Log.d("LandlordAddBuilding", "Building added successfully: " + response.body().getData().getId());
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            android.util.Log.d("LandlordAddBuilding", "✓ Building added successfully: " + response.body().getData().getId());
                             Toast.makeText(LandlordAddBuildingActivity.this, "Building added successfully!", Toast.LENGTH_SHORT).show();
                             getOnBackPressedDispatcher().onBackPressed();
+                            finish();
                         } else {
-                            android.util.Log.e("LandlordAddBuilding", "Error: " + (response.body() != null ? response.body().getMessage() : "Unknown error"));
-                            Toast.makeText(LandlordAddBuildingActivity.this, "Failed to add building", Toast.LENGTH_SHORT).show();
+                            String errorMsg = response.body() != null ? response.body().getMessage() : "Unknown error";
+                            android.util.Log.e("LandlordAddBuilding", "✗ Server Error: " + errorMsg);
+                            if (response.body() != null && response.body().getErrorMessages() != null) {
+                                for (Object error : response.body().getErrorMessages()) {
+                                    android.util.Log.e("LandlordAddBuilding", "  - " + error.toString());
+                                }
+                            }
+                            Toast.makeText(LandlordAddBuildingActivity.this, "Failed to add building: " + errorMsg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Throwable t) {
-                        android.util.Log.e("LandlordAddBuilding", "API Error: " + t.getMessage());
+                        android.util.Log.e("LandlordAddBuilding", "✗ API Call Failed: " + t.getMessage(), t);
                         Toast.makeText(LandlordAddBuildingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
