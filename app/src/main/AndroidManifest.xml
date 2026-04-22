@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -13,9 +15,11 @@
         android:theme="@style/Theme.HomeSweetHome"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PaymentWebviewActivity"
+            android:name=".activities.LandlordFlatActivity"
             android:exported="false" />
-        <!-- Splash Screen -->
+        <activity
+            android:name=".PaymentWebviewActivity"
+            android:exported="false" /> <!-- Splash Screen -->
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
@@ -53,7 +57,6 @@
             android:name=".activities.LandlordAddBuildingActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.TotalPropertiesActivity"
             android:exported="false" />
@@ -69,9 +72,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="myapp" android:host="open" />
+
+                <data
+                    android:host="open"
+                    android:scheme="myapp" />
             </intent-filter>
         </activity>
     </application>

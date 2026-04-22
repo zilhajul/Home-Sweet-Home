@@ -49,10 +49,10 @@ public class LandlordDashboardActivity extends AppCompatActivity {
         int TotalProperties = landlord.getAlreadyBuildingAdded();
        // int TotalTenants = landlord.getTenantAdded();
         binding.tvPropertiesCount.setText(String.valueOf(TotalProperties));
+        binding.btnAddFlat.setOnClickListener(v -> openFlatActivity());
         binding.btnLogout.setOnClickListener(v -> logout(v));
 
     }
-
 
     public void logout(View v) {
         RetrofitClient.getInstance(this).setSessionManager(sessionManager);
@@ -82,6 +82,10 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
     }
 
+    private void openFlatActivity() {
+        Intent intent = new Intent(this, LandlordFlatActivity.class);
+        startActivity(intent);
+    }
 
     private void clearAndGoToRole() {
         sessionManager.clearSession();
