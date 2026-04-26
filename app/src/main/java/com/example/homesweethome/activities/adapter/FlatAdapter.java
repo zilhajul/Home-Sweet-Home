@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.homesweethome.R;
+import com.example.homesweethome.model.Flat;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
 
     private List<Flat> flatList;
     private Context context;
+
 
     public FlatAdapter(List<Flat> flatList, Context context) {
         this.flatList = flatList;

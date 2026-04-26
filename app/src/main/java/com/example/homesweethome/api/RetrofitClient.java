@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RetrofitClient {
 
-    // TODO: Replace with your actual backend base URL
+
     private static final String BASE_URL = "https://housebackend.ilhamcollection.com/api/v1/";
 
     private static RetrofitClient instance;

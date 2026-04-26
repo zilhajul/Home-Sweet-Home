@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import com.example.homesweethome.R;
 import com.example.homesweethome.activities.adapter.FlatAdapter;
 import com.example.homesweethome.api.RetrofitClient;
+import com.example.homesweethome.model.Flat;
 import com.example.homesweethome.model.FlatResponse;
 import com.example.homesweethome.preferences.SessionManager;
 

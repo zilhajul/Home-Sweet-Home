@@ -156,21 +156,25 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
 
     private String getFileName(Uri uri) {
         String result = null;
-        if (uri != null && uri.getScheme() != null && uri.getScheme().equals("content")) {
-            // For content URIs, get the display name
-            result = uri.getLastPathSegment();
-        }
-        if (result == null && uri != null) {
-            String path = uri.getPath();
-            if (path != null) {
-                int cut = path.lastIndexOf('/');
-                if (cut != -1) {
-                    result = path.substring(cut + 1);
-                } else {
-                    result = path;
+
+        if (uri.getScheme().equals("content")) {
+            android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex >= 0) {
+                        result = cursor.getString(nameIndex);
+                    }
                 }
+            } finally {
+                if (cursor != null) cursor.close();
             }
         }
+
+        if (result == null) {
+            result = "image_" + System.currentTimeMillis() + ".jpg"; // fallback
+        }
+
         return result;
     }
 
@@ -182,17 +186,26 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
                 return null;
             }
-            byte[] fileBytes = new byte[inputStream.available()];
-            int bytesRead = inputStream.read(fileBytes);
-            inputStream.close();
+            java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[4096];
 
-            if (bytesRead == 0) {
-                android.util.Log.e("LandlordAddBuilding", "Error: No bytes read from file");
-                Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
-                return null;
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
             }
 
+            buffer.flush();
+            byte[] fileBytes = buffer.toByteArray();
+            inputStream.close();
+
+
             String fileName = getFileName(fileUri);
+            if (fileName == null || !fileName.contains(".")) {
+                fileName = fileName + ".jpg";
+            }
+
+            android.util.Log.d("UPLOAD_DEBUG", "Filename: " + fileName);
+
             RequestBody requestFile = RequestBody.create(fileBytes, MediaType.parse("image/*"));
             return MultipartBody.Part.createFormData(partName, fileName, requestFile);
         } catch (Exception e) {
