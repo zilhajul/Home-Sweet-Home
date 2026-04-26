@@ -1,5 +1,7 @@
 package com.example.homesweethome.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -8,15 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.homesweethome.PaymentWebviewActivity;
+import com.example.homesweethome.model.Landlord;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.example.homesweethome.R;
+import com.example.homesweethome.activities.LandlordDashboardActivity;
 import com.example.homesweethome.activities.adapter.SubscriptionAdapter;
 import com.example.homesweethome.api.AuthService;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Subscription;
+import com.example.homesweethome.preferences.SessionManager;
+import com.example.homesweethome.model.SubscriptionPurchaseResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,12 +42,20 @@ public class SubscriptionActivity extends AppCompatActivity
     private final List<Subscription> subscriptionList = new ArrayList<>();
 
     private AuthService authService;
+    private SessionManager sessionManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription);
+
+        Intent intent  = getIntent();
+        Boolean isNeed = intent.getBooleanExtra("isNeed", false);
+
+        if (isNeed){
+            Toast.makeText(this, "Payment failed", Toast.LENGTH_SHORT).show();
+        }
 
         initViews();
         setupToolbar();
@@ -75,6 +91,7 @@ public class SubscriptionActivity extends AppCompatActivity
 
     private void initAuthService() {
         authService = RetrofitClient.getInstance(this).getAuthService();
+        sessionManager = new SessionManager(this);
     }
 
     private void fetchSubscriptions() {
@@ -187,27 +204,58 @@ public class SubscriptionActivity extends AppCompatActivity
     @Override
     public void onPurchaseClick(Subscription subscription, int position) {
         if (subscription.getSubscriptionPrice() == 0) {
-            // Free plan — activate directly
-            Toast.makeText(
-                    this,
-                    subscription.getSubscriptionName() + " plan activated!",
-                    Toast.LENGTH_SHORT
-            ).show();
-            // TODO: call your API to activate the free plan for the current user
-        } else {
-            // Paid plan — start payment flow
-            Toast.makeText(
-                    this,
-                    "Starting purchase for " + subscription.getSubscriptionName() + " plan…",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            // TODO: Launch PaymentActivity or Google Play billing
-            // Example:
-            // Intent intent = new Intent(this, PaymentActivity.class);
-            // intent.putExtra("subscription_id", subscription.getId());
-            // intent.putExtra("subscription_price", subscription.getSubscriptionPrice());
-            // startActivity(intent);
+//            Toast.makeText(this, "Free plan selected", Toast.LENGTH_SHORT).show();
+//            return;
         }
+
+        // Get landlord info
+        Landlord landlord = sessionManager.getLandlord();
+        if (landlord == null) {
+            Toast.makeText(this, "Landlord information not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String landlordId = landlord.getId();
+        String subscriptionId = subscription.getId();
+
+        HashMap<String, String> body = new HashMap<>();
+        body.put("landlord_id", landlordId);
+        body.put("subscription_id", subscriptionId);
+
+        showLoading(true);
+
+        Call<ApiResponse<SubscriptionPurchaseResponse>> call = authService.purchaseSubscription(body);
+        call.enqueue(new Callback<ApiResponse<SubscriptionPurchaseResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<SubscriptionPurchaseResponse>> call,
+                                   Response<ApiResponse<SubscriptionPurchaseResponse>> response) {
+                showLoading(false);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<SubscriptionPurchaseResponse> apiResponse = response.body();
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        String paymentUrl = apiResponse.getData().getPaymentUrl();
+                        if (paymentUrl != null && !paymentUrl.isEmpty()) {
+                            Intent intent = new Intent(SubscriptionActivity.this, PaymentWebviewActivity.class);
+                            intent.putExtra("payment_url", paymentUrl);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(SubscriptionActivity.this, LandlordDashboardActivity.class);
+                            startActivity(intent);
+                        }
+                    } else {
+                        Toast.makeText(SubscriptionActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(SubscriptionActivity.this, "Failed to initiate purchase", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<SubscriptionPurchaseResponse>> call, Throwable t) {
+                showLoading(false);
+                Toast.makeText(SubscriptionActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

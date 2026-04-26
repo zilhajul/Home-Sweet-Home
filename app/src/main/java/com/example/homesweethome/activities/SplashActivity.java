@@ -24,15 +24,15 @@ public class SplashActivity extends AppCompatActivity {
         SessionManager session = new SessionManager(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (session.isLoggedIn()) {
-                if (session.isLandlord()) {
-                    startActivity(new Intent(this, LandlordDashboardActivity.class));
-                } else {
-                    startActivity(new Intent(this, TenantDashboardActivity.class));
-                }
-            } else {
+//            if (session.isLoggedIn()) {
+//                if (session.isLandlord()) {
+//                    startActivity(new Intent(this, LandlordDashboardActivity.class));
+//                } else {
+//                    startActivity(new Intent(this, TenantDashboardActivity.class));
+//                }
+//            } else {
                 startActivity(new Intent(this, RoleSelectionActivity.class));
-            }
+//            }
             finish();
         }, SPLASH_DELAY_MS);
     }

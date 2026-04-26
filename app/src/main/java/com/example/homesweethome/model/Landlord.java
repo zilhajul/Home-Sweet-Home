@@ -40,6 +40,18 @@ public class Landlord {
     @SerializedName("__v")
     private int version;
 
+    @SerializedName("already_building_added")
+    private int alreadyBuildingAdded;
+
+    @SerializedName("already_flat_added")
+    private int alreadyFlatAdded;
+
+    @SerializedName("remaining_building_add")
+    private int remainingBuildingAdd;
+
+    @SerializedName("remaining_flat_add")
+    private int remainingFlatAdd;
+
     public Landlord() {}
 
     // ─── Getters & Setters ──────────────────────────────────────────────────────
@@ -80,7 +92,19 @@ public class Landlord {
     public int getVersion() { return version; }
     public void setVersion(int version) { this.version = version; }
 
-    // ─── Helper Methods ──────────────────────────────────────────────────────
+    public int getAlreadyBuildingAdded() { return alreadyBuildingAdded; }
+    public void setAlreadyBuildingAdded(int alreadyBuildingAdded) { this.alreadyBuildingAdded = alreadyBuildingAdded; }
+
+    public int getAlreadyFlatAdded() { return alreadyFlatAdded; }
+    public void setAlreadyFlatAdded(int alreadyFlatAdded) { this.alreadyFlatAdded = alreadyFlatAdded; }
+
+    public int getRemainingBuildingAdd() { return remainingBuildingAdd; }
+    public void setRemainingBuildingAdd(int remainingBuildingAdd) { this.remainingBuildingAdd = remainingBuildingAdd; }
+
+    public int getRemainingFlatAdd() { return remainingFlatAdd; }
+    public void setRemainingFlatAdd(int remainingFlatAdd) { this.remainingFlatAdd = remainingFlatAdd; }
+
+    // ...existing code...
 
     public boolean isActive() {
         return "active".equalsIgnoreCase(landlordStatus);

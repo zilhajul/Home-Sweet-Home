@@ -1,20 +1,28 @@
 package com.example.homesweethome.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.homesweethome.R;
+import com.example.homesweethome.activities.fragment.TotalProperties;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.Building;
+import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
 import com.example.homesweethome.databinding.LandlordDashboardBinding;
 import com.example.homesweethome.utils.UiUtils;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,6 +32,7 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private LandlordDashboardBinding binding;
+    private String landlordId;
 
 
     @Override
@@ -32,12 +41,22 @@ public class LandlordDashboardActivity extends AppCompatActivity {
         binding = LandlordDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        landlordId = getIntent().getStringExtra("landlordId");
+
+
         sessionManager = new SessionManager(this);
 
-        User user = sessionManager.getUser();
+       Landlord landlord = sessionManager.getLandlord();
+       getBuildings();
 
+        binding.btnAddProperty.setOnClickListener(v -> openAddBuildingActivity());
+        binding.propertyCardId.setOnClickListener(v -> openTotalPropertiesActivity());
+        binding.tvLandlordName.setText(landlord.getLandlordName());
 
-
+        int TotalProperties = landlord.getAlreadyBuildingAdded();
+       // int TotalTenants = landlord.getTenantAdded();
+        binding.tvPropertiesCount.setText(String.valueOf(TotalProperties));
+        binding.btnAddFlat.setOnClickListener(v -> openFlatActivity());
         binding.btnLogout.setOnClickListener(v -> logout(v));
 
     }
@@ -56,6 +75,70 @@ public class LandlordDashboardActivity extends AppCompatActivity {
                         clearAndGoToRole(); // Clear locally even if API fails
                     }
                 });
+    }
+
+    private void getBuildings(){
+
+        sessionManager = new SessionManager(this);
+        landlordId = sessionManager.getLandlord().getId();
+
+
+
+        Context context = getApplicationContext();
+        if (context == null) return;
+
+        RetrofitClient client = RetrofitClient.getInstance(context);
+        client.setSessionManager(sessionManager);
+
+        client.getBuildingService()
+                .getBuildingsByLandlord(landlordId)
+                .enqueue(new Callback<ApiResponse<List<Building>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<List<Building>>> call,
+                                           Response<ApiResponse<List<Building>>> response) {
+
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            ApiResponse<List<Building>> apiResponse = response.body();
+
+                            if (apiResponse.isSuccess()) {
+                                List<Building> buildings = apiResponse.getData();
+                                if (buildings != null && !buildings.isEmpty()) {
+
+                                } else {
+                                    Toast.makeText(context, "No Building Added", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Log.d("LandlordFlatActivity","message: "+apiResponse.getMessage());
+                            }
+                        } else {
+                            Log.d("LandlordFlatActivity","message: "+response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<List<Building>>> call, Throwable t) {
+
+                    }
+                });
+
+    }
+
+    private void openAddBuildingActivity() {
+        Intent intent = new Intent(this, LandlordAddBuildingActivity.class);
+        intent.putExtra("landlordId", landlordId);
+        startActivity(intent);
+    }
+
+    private void openTotalPropertiesActivity() {
+      Intent intent = new Intent(this, TotalPropertiesActivity.class);
+       startActivity(intent);
+
+    }
+
+    private void openFlatActivity() {
+        Intent intent = new Intent(this, LandlordFlatActivity.class);
+        startActivity(intent);
     }
 
     private void clearAndGoToRole() {

@@ -111,6 +111,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
+                    android:id="@+id/propertyCardId"
                     app:cardMaxElevation="12dp">
 
                     <LinearLayout
@@ -364,7 +365,7 @@
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
-                        android:text="Add Property"
+                        android:text="Add Building"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
@@ -373,11 +374,11 @@
                         android:fontFamily="sans-serif-medium" />
 
                     <Button
-                        android:id="@+id/btnRegisterTenant"
+                        android:id="@+id/btnAddFlat"
                         android:layout_width="150dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="10dp"
-                        android:text="Register Tenant"
+                        android:text="Add Flats"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"

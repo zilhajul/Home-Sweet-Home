@@ -11,6 +11,7 @@ import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.databinding.ActivityRegisterBinding;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.RegisterRequest;
+import com.example.homesweethome.model.TenantRegisterRequest;
 import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
 import com.example.homesweethome.utils.NetworkUtils;
@@ -110,44 +111,83 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         UiUtils.showLoading(binding.progressBar, binding.btnRegister);
+        if (role!=null && role.equalsIgnoreCase("landlord")){
+            RegisterRequest request = new RegisterRequest(name, phone, password);
+            RetrofitClient.getInstance(this).getAuthService().register(request)
+                    .enqueue(new Callback<ApiResponse<User>>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse<User>> call,
+                                               Response<ApiResponse<User>> response) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
 
-        RegisterRequest request = new RegisterRequest(name, phone, password);
-        RetrofitClient.getInstance(this).getAuthService().register(request)
-                .enqueue(new Callback<ApiResponse<User>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse<User>> call,
-                                           Response<ApiResponse<User>> response) {
-                        UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
-
-                        if (response.body() != null) {
-                            ApiResponse<User> apiResponse = response.body();
-                            if (apiResponse.isSuccess()) {
+                            if (response.body() != null) {
+                                ApiResponse<User> apiResponse = response.body();
+                                if (apiResponse.isSuccess()) {
 //                                UiUtils.showSuccess(binding.getRoot(), apiResponse.getMessage());
-                                Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                navigateToLogin();
-                                finish();
+                                    Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    navigateToLogin();
+                                    finish();
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            } else if (response.errorBody() != null) {
+                                try {
+                                    Gson gson = new Gson();
+                                    ApiResponse<User> errorResponse = gson.fromJson(response.errorBody().string(), new TypeToken<ApiResponse<User>>(){}.getType());
+                                    Toast.makeText(RegisterActivity.this, errorResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                                }
                             } else {
-                                Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        } else if (response.errorBody() != null) {
-                            try {
-                                Gson gson = new Gson();
-                                ApiResponse<User> errorResponse = gson.fromJson(response.errorBody().string(), new TypeToken<ApiResponse<User>>(){}.getType());
-                                Toast.makeText(RegisterActivity.this, errorResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
                                 UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
                             }
-                        } else {
-                            UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
-                        UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
-                        UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
+                            UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
+                        }
+                    });
+        }else {
+            TenantRegisterRequest request = new TenantRegisterRequest(name, phone, password);
+            RetrofitClient.getInstance(this).getAuthService().tenantRegister(request)
+                    .enqueue(new Callback<ApiResponse<User>>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse<User>> call,
+                                               Response<ApiResponse<User>> response) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
+
+                            if (response.body() != null) {
+                                ApiResponse<User> apiResponse = response.body();
+                                if (apiResponse.isSuccess()) {
+//                                UiUtils.showSuccess(binding.getRoot(), apiResponse.getMessage());
+                                    Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    navigateToLogin();
+                                    finish();
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            } else if (response.errorBody() != null) {
+                                try {
+                                    Gson gson = new Gson();
+                                    ApiResponse<User> errorResponse = gson.fromJson(response.errorBody().string(), new TypeToken<ApiResponse<User>>(){}.getType());
+                                    Toast.makeText(RegisterActivity.this, errorResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                    UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                                }
+                            } else {
+                                UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
+                            UiUtils.hideLoading(binding.progressBar, binding.btnRegister);
+                            UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
+                        }
+                    });
+        }
     }
 
     private void navigateToLogin() {
