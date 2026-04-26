@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.homesweethome.R;
+import com.example.homesweethome.model.Flat;
 
 import java.util.List;
 
