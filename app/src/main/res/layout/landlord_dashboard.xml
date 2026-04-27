@@ -124,7 +124,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
@@ -179,7 +179,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -239,9 +239,9 @@
                 <!-- Revenue Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -253,17 +253,18 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_revenue">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_stat_icon_revenue">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/revenue_icon"
                                 android:scaleType="centerInside"
+                                android:background="@color/white"
                                 android:padding="12dp"
                                 android:contentDescription="Revenue" />
                         </FrameLayout>
@@ -293,9 +294,9 @@
                 <!-- Pending Payments Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -307,18 +308,19 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_pending">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_stat_icon_pending">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/pending_rent_icon"
                                 android:scaleType="centerInside"
                                 android:padding="12dp"
+                                android:background="@color/white"
                                 android:contentDescription="Pending" />
                         </FrameLayout>
 
