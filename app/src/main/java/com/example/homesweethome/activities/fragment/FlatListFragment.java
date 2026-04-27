@@ -1,5 +1,8 @@
 package com.example.homesweethome.activities.fragment;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.homesweethome.R;
 import com.example.homesweethome.activities.adapter.FlatAdapter;
@@ -33,6 +38,7 @@ public class FlatListFragment extends Fragment {
     private FlatAdapter adapter;
     private List<Flat> flatList = new ArrayList<>();
     private ProgressBar progressBar;
+    private TextView nothing_found_txt;
 
 
     @Override
@@ -55,6 +61,8 @@ public class FlatListFragment extends Fragment {
 
 
         rvFlats = view.findViewById(R.id.rvFlats);
+        progressBar = view.findViewById(R.id.progressBar);
+        nothing_found_txt = view.findViewById(R.id.nothing_found_txt);
         rvFlats.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new FlatAdapter(flatList, requireContext());
         rvFlats.setAdapter(adapter);
@@ -69,6 +77,8 @@ public class FlatListFragment extends Fragment {
 
     private void fetchFlats() {
 
+
+        progressBar.setVisibility(VISIBLE);
         RetrofitClient client = RetrofitClient.getInstance(requireContext());
         client.setSessionManager(sessionManager);
 
@@ -82,17 +92,26 @@ public class FlatListFragment extends Fragment {
                         if (response.isSuccessful() && response.body() != null) {
                             List<Flat> flatsFromApi = response.body().getData();
 
+                            progressBar.setVisibility(GONE);
+
                             if (flatsFromApi != null && !flatsFromApi.isEmpty()) {
                                 flatList.clear();
                                 flatList.addAll(flatsFromApi);
                                 adapter.notifyDataSetChanged();
+                            }else {
+                                rvFlats.setVisibility(GONE);
+                                nothing_found_txt.setVisibility(VISIBLE);
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<FlatResponse> call, Throwable throwable) {
-
+                        rvFlats.setVisibility(GONE);
+                        nothing_found_txt.setVisibility(VISIBLE);
+                        nothing_found_txt.setText(throwable.getMessage());
+                        Toast.makeText(getContext(), "Flat fetch failed due to "+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(GONE);
                     }
                 });
     }

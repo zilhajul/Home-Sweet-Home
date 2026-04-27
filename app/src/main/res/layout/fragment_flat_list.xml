@@ -7,7 +7,18 @@
         android:id="@+id/rvFlats"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/nothing_found_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Flat Found"
+        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif-black"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

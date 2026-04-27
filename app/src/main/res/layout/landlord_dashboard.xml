@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mohammad Ahmed"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:paddingTop="6dp"
@@ -59,14 +59,15 @@
             </LinearLayout>
 
             <FrameLayout
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/bg_notification_badge"
-                android:layout_marginEnd="12dp">
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp">
                 <ImageView
                     android:id="@+id/ivNotification"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/bell"
                     android:scaleType="centerInside"
                     android:padding="12dp"
@@ -74,17 +75,33 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_profile_badge">
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_profile_badge"
+                android:layout_marginEnd="12dp">
                 <ImageView
                     android:id="@+id/ivProfile"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/account"
                     android:scaleType="centerInside"
                     android:padding="12dp"
                     android:contentDescription="Profile" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_notification_badge"
+                android:layout_marginEnd="12dp">
+                <ImageView
+                    android:id="@+id/btnLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/logout_icon"
+                    android:scaleType="centerInside"
+                    android:padding="12dp"
+                    android:contentDescription="Log out" />
             </FrameLayout>
         </LinearLayout>
 
@@ -100,14 +117,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:weightSum="2">
 
                 <!-- Properties Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -120,18 +138,17 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_properties">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            android:background="@drawable/bg_stat_icon_properties">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/properties_icon"
                                 android:scaleType="centerInside"
-                                android:padding="12dp"
                                 android:contentDescription="Properties" />
                         </FrameLayout>
 
@@ -140,10 +157,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="8"
+                            android:layout_marginTop="5dp"
                             android:textSize="25sp"
                             android:textStyle="bold"
                             android:textColor="#2c3e50"
-                            android:paddingTop="12dp"
                             android:fontFamily="sans-serif-medium" />
 
                         <TextView
@@ -160,9 +177,9 @@
                 <!-- Tenants Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -174,18 +191,17 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_tenants">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
-                            android:background="@drawable/bg_stat_icon_tenants">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/tenant_icon"
                                 android:scaleType="centerInside"
-                                android:padding="12dp"
                                 android:contentDescription="Tenants" />
                         </FrameLayout>
 
@@ -194,10 +210,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12"
+                            android:layout_marginTop="5dp"
                             android:textSize="25sp"
                             android:textStyle="bold"
                             android:textColor="#2c3e50"
-                            android:paddingTop="12dp"
                             android:fontFamily="sans-serif-medium" />
 
                         <TextView
@@ -223,9 +239,9 @@
                 <!-- Revenue Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -237,17 +253,18 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_revenue">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_stat_icon_revenue">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/revenue_icon"
                                 android:scaleType="centerInside"
+                                android:background="@color/white"
                                 android:padding="12dp"
                                 android:contentDescription="Revenue" />
                         </FrameLayout>
@@ -277,9 +294,9 @@
                 <!-- Pending Payments Card -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="10dp"
+                    android:layout_margin="10dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="8dp"
                     app:cardBackgroundColor="@android:color/white"
@@ -291,18 +308,19 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="18dp"
-                        android:background="@drawable/gradient_stat_pending">
+                        android:background="@color/white">
 
                         <FrameLayout
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/bg_stat_icon_pending">
                             <ImageView
-                                android:layout_width="38dp"
-                                android:layout_height="38dp"
-                                android:src="@drawable/ic_launcher_background"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/pending_rent_icon"
                                 android:scaleType="centerInside"
                                 android:padding="12dp"
+                                android:background="@color/white"
                                 android:contentDescription="Pending" />
                         </FrameLayout>
 
@@ -708,31 +726,31 @@
             android:gravity="center"
             android:baselineAligned="false">
 
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="Logout"
-                android:layout_marginEnd="10dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#e74c3c"
-                android:background="@drawable/bg_button_outline_red"
-                android:fontFamily="sans-serif-medium" />
+<!--            <Button-->
+<!--                android:id="@+id/btnLogout"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Logout"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="#e74c3c"-->
+<!--                android:background="@drawable/bg_button_outline_red"-->
+<!--                android:fontFamily="sans-serif-medium" />-->
 
-            <Button
-                android:id="@+id/btnSettings"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="Settings"
-                android:layout_marginStart="10dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:background="@drawable/bg_button_settings"
-                android:fontFamily="sans-serif-medium" />
+<!--            <Button-->
+<!--                android:id="@+id/btnSettings"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Settings"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:background="@drawable/bg_button_settings"-->
+<!--                android:fontFamily="sans-serif-medium" />-->
         </LinearLayout>
 
         <!-- Bottom Padding -->
