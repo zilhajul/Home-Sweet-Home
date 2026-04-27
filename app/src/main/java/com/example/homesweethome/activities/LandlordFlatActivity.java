@@ -1,18 +1,22 @@
 package com.example.homesweethome.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,9 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,11 +34,13 @@ import com.example.homesweethome.R;
 import com.example.homesweethome.api.AuthService;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.Building;
 import com.example.homesweethome.model.Flat;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.preferences.SessionManager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,11 +56,13 @@ import retrofit2.Response;
 
 public class LandlordFlatActivity extends AppCompatActivity {
 
-    private EditText etBuildingId, etFlatName, etFlatDetail, etFlatRent, etGasBill, etElectricityBill, etWaterBill, etServiceCharge;
-    private Spinner spinnerFlatStatus, spinnerFloorNumber;
+    private EditText etFlatName, etFlatDetail, etFlatRent, etGasBill, etElectricityBill, etWaterBill, etServiceCharge;
+    private Spinner spinnerFlatStatus, spinnerFloorNumber, etBuildingId;
     private Button btnSelectFlatImage, btnSelectFlatImages, btnSubmitFlat;
     private ImageView ivFlatImagePreview;
     private ImageView ivBack;
+    private String buildingId;
+    private ProgressBar progressBar;
 
     private RecyclerView rvFlatImagesPreview;
     private ImageAdapter imageAdapter;
@@ -68,11 +73,14 @@ public class LandlordFlatActivity extends AppCompatActivity {
 
     private AuthService authService;
     private SessionManager sessionManager;
+    List<Building> buildings = new ArrayList<>();
+    List<String> buildingNames = new ArrayList<>();
 
     private ActivityResultLauncher<Intent> singleImageLauncher;
     private ActivityResultLauncher<Intent> multipleImagesLauncher;
 
     private int pendingAction = 0; // 1 for single, 2 for multiple
+    private Uri seletctedFlatImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,7 @@ public class LandlordFlatActivity extends AppCompatActivity {
 
         initViews();
         initAuthService();
-        setupSpinners();
+        getBuildings();
         setupImageLaunchers();
         setupListeners();
     }
@@ -103,6 +111,7 @@ public class LandlordFlatActivity extends AppCompatActivity {
         btnSubmitFlat = findViewById(R.id.btn_submit_flat);
         ivFlatImagePreview = findViewById(R.id.iv_flat_image_preview);
         ivBack = findViewById(R.id.ivBack);
+        progressBar = findViewById(R.id.progressBar);
 
         rvFlatImagesPreview = findViewById(R.id.rv_flat_images_preview);
         rvFlatImagesPreview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -115,7 +124,72 @@ public class LandlordFlatActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        // Spinners are already set in XML with entries
+        buildingNames.clear();
+
+        for (Building b : buildings) {
+            buildingNames.add(b.getBuildingName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                buildingNames
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        etBuildingId.setAdapter(adapter);
+
+        etBuildingId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                buildingId = buildings.get(position).getId();
+                Log.d("Spinner", "Selected ID: " + buildingId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void getBuildings() {
+        sessionManager = new SessionManager(this);
+        landlordId = sessionManager.getLandlord().getId();
+
+        Context context = getApplicationContext();
+        if (context == null) return;
+
+        RetrofitClient client = RetrofitClient.getInstance(context);
+        client.setSessionManager(sessionManager);
+
+        client.getBuildingService()
+                .getBuildingsByLandlord(landlordId)
+                .enqueue(new Callback<ApiResponse<List<Building>>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<List<Building>>> call,
+                                           Response<ApiResponse<List<Building>>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            ApiResponse<List<Building>> apiResponse = response.body();
+
+                            if (apiResponse.isSuccess()) {
+                                buildings.addAll(apiResponse.getData());
+                                if (buildings != null && !buildings.isEmpty()) {
+                                    setupSpinners();
+                                } else {
+                                    Toast.makeText(context, "No Building Added", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Log.d("LandlordFlatActivity", "message: " + apiResponse.getMessage());
+                            }
+                        } else {
+                            Log.d("LandlordFlatActivity", "message: " + response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<List<Building>>> call, Throwable t) {
+                        Log.e("LandlordFlatActivity", "getBuildings failed: " + t.getMessage());
+                    }
+                });
     }
 
     private void setupImageLaunchers() {
@@ -124,8 +198,13 @@ public class LandlordFlatActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         flatImageUri = result.getData().getData();
-                        ivFlatImagePreview.setImageURI(flatImageUri);
-                        ivFlatImagePreview.setVisibility(ImageView.VISIBLE);
+                       // ivFlatImagePreview.setImageURI(flatImageUri);
+                         seletctedFlatImageUri = flatImageUri;
+
+                         if (seletctedFlatImageUri != null) {
+                             ivFlatImagePreview.setImageURI(seletctedFlatImageUri);
+
+                         }
                     }
                 });
 
@@ -201,11 +280,10 @@ public class LandlordFlatActivity extends AppCompatActivity {
         Landlord landlord = sessionManager.getLandlord();
         if (landlord != null) {
             landlordId = landlord.getId();
-            android.util.Log.d("LandlordAddBuilding", "Landlord ID: " + landlordId);
+            Log.d("LandlordAddBuilding", "Landlord ID: " + landlordId);
         }
-        // Collect data
-        String landlord_id = landlordId; // Get from prefs or intent
-        String buildingId = etBuildingId.getText().toString().trim();
+
+        String landlord_id = landlordId;
         String flatName = etFlatName.getText().toString().trim();
         String flatStatus = spinnerFlatStatus.getSelectedItem().toString();
         String flatDetail = etFlatDetail.getText().toString().trim();
@@ -216,13 +294,19 @@ public class LandlordFlatActivity extends AppCompatActivity {
         String waterBill = etWaterBill.getText().toString().trim();
         String serviceCharge = etServiceCharge.getText().toString().trim();
 
-        // Validate
-        if (buildingId.isEmpty() || flatName.isEmpty() || flatRent.isEmpty()) {
+        // Validate required fields
+        if (buildingId == null || buildingId.isEmpty() || flatName.isEmpty() || flatRent.isEmpty()) {
             Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Prepare RequestBody
+        // Cover image is mandatory
+        if (flatImageUri == null) {
+            Toast.makeText(this, "Please select a cover image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Prepare text RequestBodies
         RequestBody landlordIdBody = RequestBody.create(MediaType.parse("text/plain"), landlord_id);
         RequestBody buildingIdBody = RequestBody.create(MediaType.parse("text/plain"), buildingId);
         RequestBody flatNameBody = RequestBody.create(MediaType.parse("text/plain"), flatName);
@@ -235,27 +319,42 @@ public class LandlordFlatActivity extends AppCompatActivity {
         RequestBody waterBillBody = RequestBody.create(MediaType.parse("text/plain"), waterBill);
         RequestBody serviceChargeBody = RequestBody.create(MediaType.parse("text/plain"), serviceCharge);
 
-        // Flat Image
-        MultipartBody.Part flatImagePart = null;
-        if (flatImageUri != null) {
-            flatImagePart = prepareFilePart("flat_image", flatImageUri);
-        }
+        // Prepare cover image part (specific mime type — NOT "image/*")
+        MultipartBody.Part flatImagePart = prepareFilePart("flat_image", flatImageUri);
 
-        // Flat Images
+        // Prepare multiple image parts
         List<MultipartBody.Part> flatImagesParts = new ArrayList<>();
         for (Uri uri : flatImagesUris) {
             flatImagesParts.add(prepareFilePart("flat_images", uri));
         }
 
-        // Call API
-        Call<ApiResponse<Flat>> call = authService.addFlat(landlordIdBody, buildingIdBody, flatNameBody, flatImagePart, flatStatusBody, flatImagesParts, flatDetailBody, floorNumberBody, flatRentBody, gasBillBody, electricityBillBody, waterBillBody, serviceChargeBody);
+        // FIX: empty list হলে AWS "x-amz-decoded-content-length: undefined" error দেয়
+        // তাই empty হলে একটা empty placeholder part দিতে হবে
+        if (flatImagesParts.isEmpty()) {
+            RequestBody emptyBody = RequestBody.create(MediaType.parse("image/jpeg"), new byte[0]);
+            flatImagesParts.add(MultipartBody.Part.createFormData("flat_images", "", emptyBody));
+        }
+
+        // Show progress, disable button
+        progressBar.setVisibility(View.VISIBLE);
+        btnSubmitFlat.setEnabled(false);
+
+        // API Call
+        Call<ApiResponse<Flat>> call = authService.addFlat(
+                landlordIdBody, buildingIdBody, flatNameBody, flatImagePart,
+                flatStatusBody, flatImagesParts, flatDetailBody, floorNumberBody,
+                flatRentBody, gasBillBody, electricityBillBody, waterBillBody, serviceChargeBody
+        );
+
         call.enqueue(new Callback<ApiResponse<Flat>>() {
             @Override
             public void onResponse(Call<ApiResponse<Flat>> call, Response<ApiResponse<Flat>> response) {
+                progressBar.setVisibility(View.GONE);
+                btnSubmitFlat.setEnabled(true);
+
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(LandlordFlatActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     finish();
-                    // Handle success
                 } else {
                     Toast.makeText(LandlordFlatActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -263,25 +362,70 @@ public class LandlordFlatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<Flat>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                btnSubmitFlat.setEnabled(true);
                 Toast.makeText(LandlordFlatActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+
     private MultipartBody.Part prepareFilePart(String partName, Uri fileUri) {
-        File file = new File(getCacheDir(), "temp_image");
-        try (InputStream inputStream = getContentResolver().openInputStream(fileUri);
-             FileOutputStream outputStream = new FileOutputStream(file)) {
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
+        String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss_SSS", java.util.Locale.US).format(new java.util.Date());
+        String extension = getFileExtension(fileUri);
+        String fileName = "IMG_" + timestamp + "." + extension;
+
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(fileUri);
+            if (inputStream == null) {
+                android.util.Log.e("LandlordFlatActivity", "Error: InputStream is null");
+                Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
+                return null;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[4096];
+
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+            byte[] fileBytes = buffer.toByteArray();
+            inputStream.close();
+
+
+            if (fileName == null || !fileName.contains(".")) {
+                fileName = fileName + ".jpg";
+            }
+
+            android.util.Log.d("UPLOAD_DEBUG", "Filename: " + fileName);
+
+            RequestBody requestFile = RequestBody.create(fileBytes, MediaType.parse("image/*"));
+            return MultipartBody.Part.createFormData(partName, fileName, requestFile);
+        } catch (Exception e) {
+            android.util.Log.e("LandlordFlatActivity", "Error preparing file: " + e.getMessage());
+            Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
+            return null;
         }
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+
+    }
+
+    private String getFileExtension(Uri uri) {
+        String extension = "jpg"; // default
+        if ("content".equals(uri.getScheme())) {
+            String mimeType = getContentResolver().getType(uri);
+            if (mimeType != null) {
+                if (mimeType.contains("png")) {
+                    extension = "png";
+                } else if (mimeType.contains("webp")) {
+                    extension = "webp";
+                } else if (mimeType.contains("jpeg") || mimeType.contains("jpg")) {
+                    extension = "jpg";
+                }
+            }
+        }
+        return extension;
     }
 
     @Override

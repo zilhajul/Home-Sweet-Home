@@ -21,6 +21,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
     private List<Flat> flatList;
     private Context context;
 
+
     public FlatAdapter(List<Flat> flatList, Context context) {
         this.flatList = flatList;
         this.context = context;

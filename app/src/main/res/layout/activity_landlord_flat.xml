@@ -56,12 +56,10 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
-        <EditText
+        <Spinner
             android:id="@+id/et_building_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/building_id_hint"
-            android:inputType="text"
             android:background="@drawable/edittext_rounded_bg"
             android:layout_marginBottom="16dp" />
 
@@ -121,7 +119,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/flat_status_options"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_rounded_bg"/>
 
         <!-- Flat Images -->
         <TextView
@@ -278,6 +277,14 @@
             android:layout_height="wrap_content"
             android:text="@string/submit_flat"
             android:layout_marginTop="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
         </LinearLayout>
 
         <View
