@@ -2,6 +2,7 @@ package com.example.homesweethome.api;
 
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Building;
+import com.example.homesweethome.model.BuildingsResponse;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface BuildingService {
         );
 
     @GET("buildings/landlord")
-    Call<ApiResponse<List<Building>>> getBuildingsByLandlord(
+    Call<BuildingsResponse> getBuildingsByLandlord(
             @Query("landlord_id") String landlordId
     );
 

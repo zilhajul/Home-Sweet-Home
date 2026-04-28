@@ -16,6 +16,7 @@ import com.example.homesweethome.activities.fragment.TotalProperties;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Building;
+import com.example.homesweethome.model.BuildingsResponse;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
@@ -33,6 +34,8 @@ public class LandlordDashboardActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private LandlordDashboardBinding binding;
     private String landlordId;
+    Landlord landlord;
+    int TotalProperties;
 
 
     @Override
@@ -45,15 +48,14 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
 
         sessionManager = new SessionManager(this);
-
-       Landlord landlord = sessionManager.getLandlord();
+        landlord = sessionManager.getLandlord();
        getBuildings();
 
         binding.btnAddProperty.setOnClickListener(v -> openAddBuildingActivity());
         binding.propertyCardId.setOnClickListener(v -> openTotalPropertiesActivity());
         binding.tvLandlordName.setText(landlord.getLandlordName());
 
-        int TotalProperties = landlord.getAlreadyBuildingAdded();
+        TotalProperties = landlord.getAlreadyBuildingAdded();
        // int TotalTenants = landlord.getTenantAdded();
         binding.tvPropertiesCount.setText(String.valueOf(TotalProperties));
         binding.btnAddFlat.setOnClickListener(v -> openFlatActivity());
@@ -92,19 +94,25 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
         client.getBuildingService()
                 .getBuildingsByLandlord(landlordId)
-                .enqueue(new Callback<ApiResponse<List<Building>>>() {
+                .enqueue(new Callback<BuildingsResponse>() {
                     @Override
-                    public void onResponse(Call<ApiResponse<List<Building>>> call,
-                                           Response<ApiResponse<List<Building>>> response) {
+                    public void onResponse(Call<BuildingsResponse> call,
+                                           Response<BuildingsResponse> response) {
 
 
                         if (response.isSuccessful() && response.body() != null) {
-                            ApiResponse<List<Building>> apiResponse = response.body();
-
+                            BuildingsResponse apiResponse = response.body();
                             if (apiResponse.isSuccess()) {
                                 List<Building> buildings = apiResponse.getData();
+                                TotalProperties = apiResponse.getTotalData();
+//                                binding.tvPropertiesCount.setText(apiResponse.getTotalData());
                                 if (buildings != null && !buildings.isEmpty()) {
-
+                                    if (landlord.getRemainingBuildingAdd()==buildings.size()){
+                                        binding.btnAddProperty.setEnabled(false);
+                                        binding.btnAddFlat.setEnabled(false);
+                                        Toast.makeText(LandlordDashboardActivity.this, "You are exceeded your limit", Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
                                 } else {
                                     Toast.makeText(context, "No Building Added", Toast.LENGTH_SHORT).show();
                                 }
@@ -117,7 +125,7 @@ public class LandlordDashboardActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ApiResponse<List<Building>>> call, Throwable t) {
+                    public void onFailure(Call<BuildingsResponse> call, Throwable t) {
 
                     }
                 });
