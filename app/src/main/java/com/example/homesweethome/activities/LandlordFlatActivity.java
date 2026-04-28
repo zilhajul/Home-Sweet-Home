@@ -35,6 +35,7 @@ import com.example.homesweethome.api.AuthService;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Building;
+import com.example.homesweethome.model.BuildingsResponse;
 import com.example.homesweethome.model.Flat;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.preferences.SessionManager;
@@ -162,12 +163,12 @@ public class LandlordFlatActivity extends AppCompatActivity {
 
         client.getBuildingService()
                 .getBuildingsByLandlord(landlordId)
-                .enqueue(new Callback<ApiResponse<List<Building>>>() {
+                .enqueue(new Callback<BuildingsResponse>() {
                     @Override
-                    public void onResponse(Call<ApiResponse<List<Building>>> call,
-                                           Response<ApiResponse<List<Building>>> response) {
+                    public void onResponse(Call<BuildingsResponse> call,
+                                           Response<BuildingsResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            ApiResponse<List<Building>> apiResponse = response.body();
+                            BuildingsResponse apiResponse = response.body();
 
                             if (apiResponse.isSuccess()) {
                                 buildings.addAll(apiResponse.getData());
@@ -185,7 +186,7 @@ public class LandlordFlatActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<ApiResponse<List<Building>>> call, Throwable t) {
+                    public void onFailure(Call<BuildingsResponse> call, Throwable t) {
                         Log.e("LandlordFlatActivity", "getBuildings failed: " + t.getMessage());
                     }
                 });
