@@ -1,6 +1,9 @@
 package com.example.homesweethome.api;
 
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.ComplainCreateResponse;
+import com.example.homesweethome.model.ComplainRequest;
+import com.example.homesweethome.model.ComplainResponse;
 import com.example.homesweethome.model.Flat;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
@@ -23,6 +26,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface AuthService {
 
@@ -76,4 +80,16 @@ public interface AuthService {
             @Part("water_bill") RequestBody waterBill,
             @Part("service_charge") RequestBody serviceCharge
     );
+
+    // ========== Complain Endpoints ==========
+
+    @POST("complains")
+    Call<ComplainCreateResponse> createComplain(@Body ComplainRequest request);
+
+    @GET("complains")
+    Call<ComplainResponse> getComplains(
+            @Query("landlord_id") String landlordId,
+            @Query("tenant_id") String tenantId
+    );
+
 }

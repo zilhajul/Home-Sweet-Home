@@ -2,6 +2,7 @@ package com.example.homesweethome.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,45 +23,21 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private TextView tvWelcome;
-    private Button btnLogout;
+    private Button btnLogout, btnComplain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tenant_dashboard);
 
-        sessionManager = new SessionManager(this);
+        btnComplain = findViewById(R.id.btnComplain);
 
-        tvWelcome = findViewById(R.id.tvWelcome);
-        btnLogout = findViewById(R.id.btnLogout);
+        btnComplain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        User user = sessionManager.getUser();
-        tvWelcome.setText("Welcome, " + (user != null ? user.getName() : "Tenant") + "!");
+            }
+        });
 
-        btnLogout.setOnClickListener(v -> logout());
-    }
-
-    private void logout() {
-        RetrofitClient.getInstance(this).setSessionManager(sessionManager);
-        RetrofitClient.getInstance(this).getAuthService().logout()
-                .enqueue(new Callback<ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse<Void>> call,
-                                           Response<ApiResponse<Void>> response) {
-                        clearAndGoToRole();
-                    }
-                    @Override
-                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
-                        clearAndGoToRole();
-                    }
-                });
-    }
-
-    private void clearAndGoToRole() {
-        sessionManager.clearSession();
-        Intent intent = new Intent(this, RoleSelectionActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
     }
 }
