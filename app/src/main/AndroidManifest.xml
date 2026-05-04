@@ -26,6 +26,9 @@
             android:name=".activities.ShowAllTenants"
             android:exported="false" />
         <activity
+            android:name=".activities.ComplainActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LandlordFlatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
@@ -72,6 +75,7 @@
         <activity
             android:name=".activities.TotalPropertiesActivity"
             android:exported="false" />
+
         <activity
             android:name=".activities.TenantDashboardActivity"
             android:exported="false" /> <!-- Subscription Activity -->
