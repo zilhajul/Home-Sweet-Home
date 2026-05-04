@@ -87,6 +87,7 @@ public interface AuthService {
             @Part("water_bill") RequestBody waterBill,
             @Part("service_charge") RequestBody serviceCharge
     );
+
     @Multipart
     @PATCH("flats/landlord")
     Call<ApiResponse<Flat>> updateFlat(
@@ -109,7 +110,26 @@ public interface AuthService {
     Call<ComplainCreateResponse> createComplain(@Body ComplainRequest request);
 
     @GET("complains")
-    Call<ComplainResponse> getComplains(
+    Call<ApiResponse<List<Complain>>> getComplains(
             @Query("landlord_id") String landlordId,
             @Query("tenant_id") String tenantId
     );
+
+    @PATCH("complains")
+    Call<ApiResponse> updateComplain(HashMap<String, String> body);
+
+    @POST("flat_assigns")
+    Call<ApiResponse<TenantResponse>> assignTenant(Map<String, String> body);
+
+    @PATCH("flat_assigns")
+    Call<ApiResponse<TenantResponse>> updateTenant(Map<String, String> body);
+
+    @HTTP(method = "DELETE", path = "flat_assigns", hasBody = true)
+    Call<ApiResponse<TenantResponse>> deleteTenant(@Body Map<String, String> body);
+
+    @POST("rents")
+    Call<ApiResponse> addRent(HashMap<String, String> body);
+
+    @GET("flat_assigns")
+    Call<TenantResponse> getAllTenants();
+}
