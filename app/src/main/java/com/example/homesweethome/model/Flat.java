@@ -56,6 +56,12 @@ public class Flat {
     @SerializedName("__v")
     private int v;
 
+    @SerializedName("tenant_id")
+    private Tenant tenantId;
+
+
+
+
     // Getters and Setters
     public String getLandlordId() {
         return landlordId;
@@ -191,5 +197,13 @@ public class Flat {
 
     public void setV(int v) {
         this.v = v;
+    }
+
+    public Tenant getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Tenant tenantId) {
+        this.tenantId = tenantId;
     }
 }

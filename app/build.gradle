@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.airbnb.android:lottie:6.4.0'
     implementation libs.activity
     implementation libs.navigation.runtime
+    implementation libs.cardview
 }

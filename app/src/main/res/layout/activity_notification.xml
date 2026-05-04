@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context=".activities.Notification">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,47 +35,31 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All Flats"
+                android:text="All Notifications"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:fontFamily="sans-serif-medium" />
 
-            <TextView
-                android:id="@+id/tvFlatCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0 Flats"
-                android:textSize="12sp"
-                android:textColor="@android:color/white"
-                android:alpha="0.85"
-                android:paddingTop="4dp"
-                android:fontFamily="sans-serif" />
+
         </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFlats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/rvNotifications"
         android:padding="8dp"
-        android:visibility="visible"/>
-
-    <TextView
-        android:id="@+id/nothing_found_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Flat Found"
-        android:textSize="25sp"
-        android:layout_gravity="center"
-        android:fontFamily="sans-serif-black"
         android:visibility="gone"/>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <TextView
+        android:id="@+id/tvNoNotifications"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:text="No Notifications"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:visibility="visible"/>
 
 </LinearLayout>

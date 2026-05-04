@@ -7,7 +7,7 @@ import java.util.List;
 public class Building {
 
     @SerializedName("_id")
-    private String id;
+    private  String id;
 
     @SerializedName("landlord_id")
     private String landlordId;
@@ -66,7 +66,7 @@ public class Building {
 
     // ─── Getters & Setters ──────────────────────────────────────────────────────
 
-    public String getId() { return id; }
+    public  String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
     public String getLandlordId() { return landlordId; }
