@@ -59,6 +59,20 @@ public class Flat {
     @SerializedName("tenant_id")
     private Tenant tenantId;
 
+    @SerializedName("total_rent")
+    private double totalRent;
+
+    @SerializedName("rent_status")
+    private String rentStatus;
+
+    @SerializedName("rent_month")
+    private String rentMonth;
+
+    @SerializedName("rent_year")
+    private String rentYear;
+
+
+
 
 
 
@@ -205,5 +219,38 @@ public class Flat {
 
     public void setTenantId(Tenant tenantId) {
         this.tenantId = tenantId;
+    }
+
+
+    public double getTotalRent() {
+        return totalRent;
+    }
+
+    public void setTotalRent(double totalRent) {
+        this.totalRent = totalRent;
+    }
+
+    public String getRentStatus() {
+        return rentStatus;
+    }
+
+    public void setRentStatus(String rentStatus) {
+        this.rentStatus = rentStatus;
+    }
+
+    public String getRentMonth() {
+        return rentMonth;
+    }
+
+    public void setRentMonth(String rentMonth) {
+        this.rentMonth = rentMonth;
+    }
+
+    public String getRentYear() {
+        return rentYear;
+    }
+
+    public void setRentYear(String rentYear) {
+        this.rentYear = rentYear;
     }
 }

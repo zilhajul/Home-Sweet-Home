@@ -2,6 +2,7 @@ package com.example.homesweethome.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class Notification extends AppCompatActivity {
     private TextView tvNoNotifications;
     private List<Complain> complainList = new ArrayList<>();
     private  ComplainAdapter adapter;
+    private ImageView ivBack;
 
 
 
@@ -50,6 +52,9 @@ public class Notification extends AppCompatActivity {
         landlordId = getIntent().getStringExtra("landlordId");
         rvNotification = findViewById(R.id.rvNotifications);
         tvNoNotifications = findViewById(R.id.tvNoNotifications);
+        ivBack = findViewById(R.id.ivBack);
+
+        ivBack.setOnClickListener(view -> onBackPressed());
 
         getComplains();
 

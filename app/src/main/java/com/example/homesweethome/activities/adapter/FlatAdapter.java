@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.homesweethome.R;
 import com.example.homesweethome.activities.LandlordFlatActivity;
 import com.example.homesweethome.activities.ShowAllTenants;
+import com.example.homesweethome.activities.ViewInfo;
 import com.example.homesweethome.activities.fragment.FlatListFragment;
 import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.model.ApiResponse;
@@ -73,7 +74,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
         if (flat.getTenantId()==null ){
 
             holder.btnAssignTenant.setVisibility(View.VISIBLE);
-            holder.btnViewTenant.setVisibility(View.GONE);
+            holder.btnViewInfo.setVisibility(View.VISIBLE);
             holder.btnUpdateTenant.setVisibility(View.GONE);
             holder.btnDeleteTenant.setVisibility(View.GONE);
 
@@ -82,7 +83,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
             holder.btnAssignTenant.setVisibility(View.GONE);
             holder.btnUpdateTenant.setVisibility(View.VISIBLE);
             holder.btnDeleteTenant.setVisibility(View.VISIBLE);
-            holder.btnViewTenant.setVisibility(View.VISIBLE);
+            holder.btnViewInfo.setVisibility(View.VISIBLE);
 
         }
 
@@ -115,9 +116,19 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
             }
         });
 
-        holder.btnViewTenant.setOnClickListener(new View.OnClickListener() {
+        holder.btnViewInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+            Intent intent = new Intent(context, ViewInfo.class);
+            intent.putExtra("flatId", flat.getId());
+            intent.putExtra("buildingId", buildingId);
+            intent.putExtra("landlordId", landlordId);
+            if (flat.getTenantId() != null) {
+                intent.putExtra("tenantId", flat.getTenantId().getId());
+            }
+            context.startActivity(intent);
+
 
             }
         });
@@ -254,7 +265,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
     public static class FlatViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFlatImage;
         TextView tvFlatName, tvFloorNumber, tvFlatRent, tvStatus, tvGasBill, tvElectricityBill, tvWaterBill, tvServiceCharge;
-        Button btnAssignTenant, btnViewTenant, btnUpdateTenant, btnDeleteTenant, btnDeleteFlat, btnEditFlat;
+        Button btnAssignTenant, btnViewInfo, btnUpdateTenant, btnDeleteTenant, btnDeleteFlat, btnEditFlat;
 
         public FlatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -268,7 +279,7 @@ public class FlatAdapter extends RecyclerView.Adapter<FlatAdapter.FlatViewHolder
             tvWaterBill = itemView.findViewById(R.id.tvWaterBill);
             tvServiceCharge = itemView.findViewById(R.id.tvServiceCharge);
             btnAssignTenant = itemView.findViewById(R.id.assignTenantId);
-            btnViewTenant = itemView.findViewById(R.id.viewTenantId);
+            btnViewInfo = itemView.findViewById(R.id.viewInfoId);
             btnUpdateTenant = itemView.findViewById(R.id.changeTenantId);
             btnDeleteTenant = itemView.findViewById(R.id.deleteTenantId);
             btnDeleteFlat = itemView.findViewById(R.id.deleteFlatId);

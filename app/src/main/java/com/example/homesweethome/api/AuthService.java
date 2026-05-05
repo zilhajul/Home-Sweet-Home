@@ -7,12 +7,15 @@ import com.example.homesweethome.model.ComplainCreateResponse;
 import com.example.homesweethome.model.ComplainRequest;
 import com.example.homesweethome.model.ComplainResponse;
 import com.example.homesweethome.model.Flat;
+import com.example.homesweethome.model.FlatResponse;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
+import com.example.homesweethome.model.Rent;
 import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.SubscriptionPurchaseResponse;
+import com.example.homesweethome.model.Tenant;
 import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.TenantRegisterRequest;
 import com.example.homesweethome.model.TenantResponse;
@@ -116,20 +119,33 @@ public interface AuthService {
     );
 
     @PATCH("complains")
-    Call<ApiResponse> updateComplain(HashMap<String, String> body);
+    Call<ApiResponse> updateComplain(@Body HashMap<String, String> body);
 
     @POST("flat_assigns")
-    Call<ApiResponse<TenantResponse>> assignTenant(Map<String, String> body);
+    Call<ApiResponse<TenantResponse>> assignTenant(@Body Map<String, String> body);
 
     @PATCH("flat_assigns")
-    Call<ApiResponse<TenantResponse>> updateTenant(Map<String, String> body);
+    Call<ApiResponse<TenantResponse>> updateTenant(@Body Map<String, String> body);
 
     @HTTP(method = "DELETE", path = "flat_assigns", hasBody = true)
     Call<ApiResponse<TenantResponse>> deleteTenant(@Body Map<String, String> body);
 
     @POST("rents")
-    Call<ApiResponse> addRent(HashMap<String, String> body);
+    Call<ApiResponse> addRent(@Body HashMap<String, String> body);
 
-    @GET("flat_assigns")
+    @GET("rents")
+    Call<ApiResponse<List<Rent>>> getRents(
+            @Query("landlord_id") String landlordId,
+            @Query("tenant_id") String tenantId,
+            @Query("flat_id") String flatId,
+            @Query("building_id") String buildingId
+    );
+
+    @PATCH("rents")
+    Call<ApiResponse<Rent>> updateRent(@Body HashMap<String, String> body);
+
+
+
+    @GET("tenants/admin")
     Call<TenantResponse> getAllTenants();
 }

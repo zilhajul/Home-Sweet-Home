@@ -35,7 +35,7 @@ public class Tenant {
     private String tenantNidNumber;
 
     @SerializedName("forgot_password_otp")
-    private Integer forgotPasswordOtp; // ⚠️ null আসতে পারে, তাই Integer
+    private Integer forgotPasswordOtp;
 
 
 

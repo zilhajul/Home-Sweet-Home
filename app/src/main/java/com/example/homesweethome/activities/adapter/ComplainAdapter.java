@@ -56,11 +56,14 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.Compla
         holder.tvResponse.setText(complain.getComplain_response());
         holder.tvDate.setText(complain.getCreatedAt());
 
-        if (complain.getComplain_status().equals("Pending")){
+        String status= complain.getComplain_status();
+
+
+        if (status.equals("pending")){
             holder.etResponse.setVisibility(View.VISIBLE);
             holder.btnCancle.setVisibility(View.VISIBLE);
             holder.btnConfirm.setVisibility(View.VISIBLE);
-        }else {
+        }else if(status.equals("Resolved") || status.equals("Rejected")) {
             holder.etResponse.setVisibility(View.GONE);
             holder.btnCancle.setVisibility(View.GONE);
             holder.btnConfirm.setVisibility(View.GONE);
