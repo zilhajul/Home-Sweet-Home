@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ── CARD HEADER: Month + Year + Status Badge ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Month/Year -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvRentMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="May"
+                    android:textColor="#1A1A2E"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="May" />
+
+                <TextView
+                    android:id="@+id/tvRentYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2026"
+                    android:textColor="#9E9E9E"
+                    android:textSize="12sp"
+                    tools:text="2026" />
+
+            </LinearLayout>
+
+            <!-- Status Badge -->
+            <TextView
+                android:id="@+id/tvRentStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UNPAID"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/bg_button_outline_red"
+                tools:text="UNPAID"
+                 />
+
+        </LinearLayout>
+
+        <!-- ── DIVIDER ── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ── BILL ROWS ── -->
+
+        <!-- Flat Rent -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_home"
+                app:tint="#1A73E8"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Flat Rent"
+                android:textColor="#555555"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvFlatRent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A1A2E"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="৳ 1,000" />
+
+        </LinearLayout>
+
+        <!-- Gas Bill -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_local_fire_department"
+                app:tint="#FF7043"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gas Bill"
+                android:textColor="#555555"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvGasBill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A1A2E"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="৳ 150" />
+
+        </LinearLayout>
+
+        <!-- Electricity Bill -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_bolt"
+                app:tint="#FFC107"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Electricity Bill"
+                android:textColor="#555555"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvElectricityBill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A1A2E"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="৳ 100" />
+
+        </LinearLayout>
+
+        <!-- Water Bill -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_water_drop"
+                app:tint="#29B6F6"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Water Bill"
+                android:textColor="#555555"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvWaterBill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A1A2E"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="৳ 30" />
+
+        </LinearLayout>
+
+        <!-- Service Charge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_build"
+                app:tint="#AB47BC"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Service Charge"
+                android:textColor="#555555"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvServiceCharge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A1A2E"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="৳ 50" />
+
+        </LinearLayout>
+
+        <!-- ── TOTAL ROW ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_total_row"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total"
+                android:textColor="#1A1A2E"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTotalRent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="৳ 0"
+                android:textColor="#1A73E8"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="৳ 1,330" />
+
+        </LinearLayout>
+
+        <!-- ── ACTION BUTTON ── -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMarkPaid"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:text="Mark as Paid"
+            android:textSize="14sp"
+            app:cornerRadius="12dp"
+            app:backgroundTint="#1A73E8"
+            tools:backgroundTint="#4CAF50" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

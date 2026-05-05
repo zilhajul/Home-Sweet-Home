@@ -2,6 +2,7 @@ package com.example.homesweethome.api;
 
 import android.content.Context;
 
+import com.example.homesweethome.model.TenantResponse;
 import com.example.homesweethome.preferences.SessionManager;
 
 import okhttp3.OkHttpClient;
@@ -100,4 +101,6 @@ public class RetrofitClient {
     }
 
     public FlatService getFlatService() { return retrofit.create(FlatService.class); }
+
+    public TenantResponse getTenantResponse() { return retrofit.create(TenantResponse.class); }
 }

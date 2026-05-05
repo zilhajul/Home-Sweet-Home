@@ -3,7 +3,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
@@ -14,6 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeSweetHome"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activities.ViewInfo"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Notification"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Generate_Rent"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ShowAllTenants"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ComplainActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.LandlordFlatActivity"
             android:exported="false"
@@ -61,7 +78,6 @@
         <activity
             android:name=".activities.TotalPropertiesActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.TenantDashboardActivity"
             android:exported="false" /> <!-- Subscription Activity -->

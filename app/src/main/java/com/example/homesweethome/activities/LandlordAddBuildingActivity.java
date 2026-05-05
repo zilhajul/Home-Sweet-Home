@@ -34,7 +34,7 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
     private Uri selectedBuildingImageUri = null;
     private final java.util.List<Uri> additionalImageUris = new java.util.ArrayList<>();
     private SessionManager sessionManager;
-    private String landlordId;
+    private String landlordId,buildingId,action=null;
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int PICK_ADDITIONAL_IMAGES_REQUEST = 2;
     private static final MediaType TEXT_MEDIA_TYPE = MediaType.parse("text/plain");
@@ -47,6 +47,10 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = LandlordAddBuildingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        buildingId = getIntent().getStringExtra("buildingId");
+        action = getIntent().getStringExtra("action");
+
 
         // Initialize activity result launchers
         initializeActivityResultLaunchers();
@@ -361,36 +365,72 @@ public class LandlordAddBuildingActivity extends AppCompatActivity {
         android.util.Log.d("LandlordAddBuilding", "  Details: '" + buildingDetails + "'");
         android.util.Log.d("LandlordAddBuilding", "  MediaType: " + TEXT_MEDIA_TYPE);
         
-        RetrofitClient.getInstance(this).setSessionManager(sessionManager);
-        RetrofitClient.getInstance(this).getBuildingService().addBuilding(
-                landlordIdBody, buildingNameBody, buildingAddressBody, buildingStatusBody, zoneNameBody, subZoneNameBody,
-                totalFloorsBody, totalFlatsBody, buildingDetailsBody, buildingImage, additionalImages)
-                .enqueue(new Callback<ApiResponse<Building>>() {
-                    @Override
-                    public void onResponse(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Response<ApiResponse<Building>> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            android.util.Log.d("LandlordAddBuilding", "✓ Building added successfully: " + response.body().getData().getId());
-                            Toast.makeText(LandlordAddBuildingActivity.this, "Building added successfully!", Toast.LENGTH_SHORT).show();
-                            getOnBackPressedDispatcher().onBackPressed();
-                            finish();
-                        } else {
-                            String errorMsg = response.body() != null ? response.body().getMessage() : "Unknown error";
-                            android.util.Log.e("LandlordAddBuilding", "✗ Server Error: " + errorMsg);
-                            if (response.body() != null && response.body().getErrorMessages() != null) {
-                                for (Object error : response.body().getErrorMessages()) {
-                                    android.util.Log.e("LandlordAddBuilding", "  - " + error.toString());
+        if (action==null){
+            RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+            RetrofitClient.getInstance(this).getBuildingService().addBuilding(
+                            landlordIdBody, buildingNameBody, buildingAddressBody, buildingStatusBody, zoneNameBody, subZoneNameBody,
+                            totalFloorsBody, totalFlatsBody, buildingDetailsBody, buildingImage, additionalImages)
+                    .enqueue(new Callback<ApiResponse<Building>>() {
+                        @Override
+                        public void onResponse(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Response<ApiResponse<Building>> response) {
+                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                                android.util.Log.d("LandlordAddBuilding", "✓ Building added successfully: " + response.body().getData().getId());
+                                Toast.makeText(LandlordAddBuildingActivity.this, "Building added successfully!", Toast.LENGTH_SHORT).show();
+                                getOnBackPressedDispatcher().onBackPressed();
+                                finish();
+                            } else {
+                                String errorMsg = response.body() != null ? response.body().getMessage() : "Unknown error";
+                                android.util.Log.e("LandlordAddBuilding", "✗ Server Error: " + errorMsg);
+                                if (response.body() != null && response.body().getErrorMessages() != null) {
+                                    for (Object error : response.body().getErrorMessages()) {
+                                        android.util.Log.e("LandlordAddBuilding", "  - " + error.toString());
+                                    }
                                 }
+                                Toast.makeText(LandlordAddBuildingActivity.this, "Failed to add building: " + errorMsg, Toast.LENGTH_SHORT).show();
                             }
-                            Toast.makeText(LandlordAddBuildingActivity.this, "Failed to add building: " + errorMsg, Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onFailure(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Throwable t) {
-                        android.util.Log.e("LandlordAddBuilding", "✗ API Call Failed: " + t.getMessage(), t);
-                        Toast.makeText(LandlordAddBuildingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Throwable t) {
+                            android.util.Log.e("LandlordAddBuilding", "✗ API Call Failed: " + t.getMessage(), t);
+                            Toast.makeText(LandlordAddBuildingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+
+            RequestBody buildingIdBody = RequestBody.create(buildingId, TEXT_MEDIA_TYPE);
+
+            RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+            RetrofitClient.getInstance(this).getBuildingService().updateBuilding(
+                            buildingIdBody, buildingNameBody, buildingAddressBody, buildingStatusBody, zoneNameBody, subZoneNameBody,
+                            totalFloorsBody, totalFlatsBody, buildingDetailsBody, buildingImage, additionalImages)
+                    .enqueue(new Callback<ApiResponse<Building>>() {
+                        @Override
+                        public void onResponse(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Response<ApiResponse<Building>> response) {
+                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                                Toast.makeText(LandlordAddBuildingActivity.this, "Building Updated successfully!", Toast.LENGTH_SHORT).show();
+                                getOnBackPressedDispatcher().onBackPressed();
+                                finish();
+                            } else {
+                                String errorMsg = response.body() != null ? response.body().getMessage() : "Unknown error";
+                                android.util.Log.e("LandlordAddBuilding", "✗ Server Error: " + errorMsg);
+                                if (response.body() != null && response.body().getErrorMessages() != null) {
+                                    for (Object error : response.body().getErrorMessages()) {
+                                        android.util.Log.e("LandlordAddBuilding", "  - " + error.toString());
+                                    }
+                                }
+                                Toast.makeText(LandlordAddBuildingActivity.this, "Failed to Update building: " + errorMsg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@org.jetbrains.annotations.NotNull Call<ApiResponse<Building>> call, @org.jetbrains.annotations.NotNull Throwable t) {
+                            android.util.Log.e("LandlordAddBuilding", "✗ API Call Failed: " + t.getMessage(), t);
+                            Toast.makeText(LandlordAddBuildingActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }
 

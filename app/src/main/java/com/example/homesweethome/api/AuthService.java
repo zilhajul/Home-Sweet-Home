@@ -1,17 +1,27 @@
 package com.example.homesweethome.api;
 
 import com.example.homesweethome.model.ApiResponse;
+import com.example.homesweethome.model.BuildingsResponse;
+import com.example.homesweethome.model.Complain;
+import com.example.homesweethome.model.ComplainCreateResponse;
+import com.example.homesweethome.model.ComplainRequest;
+import com.example.homesweethome.model.ComplainResponse;
 import com.example.homesweethome.model.Flat;
+import com.example.homesweethome.model.FlatResponse;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.RegisterRequest;
+import com.example.homesweethome.model.Rent;
 import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.SubscriptionPurchaseResponse;
+import com.example.homesweethome.model.Tenant;
 import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.TenantRegisterRequest;
+import com.example.homesweethome.model.TenantResponse;
 import com.example.homesweethome.model.User;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +29,14 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public interface AuthService {
 
@@ -76,4 +90,62 @@ public interface AuthService {
             @Part("water_bill") RequestBody waterBill,
             @Part("service_charge") RequestBody serviceCharge
     );
+
+    @Multipart
+    @PATCH("flats/landlord")
+    Call<ApiResponse<Flat>> updateFlat(
+            @Part("_id") RequestBody flatId,
+            @Part("flat_name") RequestBody flatName,
+            @Part MultipartBody.Part flatImage,
+            @Part("flat_status") RequestBody flatStatus,
+            @Part List<MultipartBody.Part> flatImages,
+            @Part("flat_detail") RequestBody flatDetail,
+            @Part("flat_rent") RequestBody flatRent,
+            @Part("gas_bill") RequestBody gasBill,
+            @Part("electricity_bill") RequestBody electricityBill,
+            @Part("water_bill") RequestBody waterBill,
+            @Part("service_charge") RequestBody serviceCharge
+    );
+
+    // ========== Complain Endpoints ==========
+
+    @POST("complains")
+    Call<ComplainCreateResponse> createComplain(@Body ComplainRequest request);
+
+    @GET("complains")
+    Call<ApiResponse<List<Complain>>> getComplains(
+            @Query("landlord_id") String landlordId,
+            @Query("tenant_id") String tenantId
+    );
+
+    @PATCH("complains")
+    Call<ApiResponse> updateComplain(@Body HashMap<String, String> body);
+
+    @POST("flat_assigns")
+    Call<ApiResponse<TenantResponse>> assignTenant(@Body Map<String, String> body);
+
+    @PATCH("flat_assigns")
+    Call<ApiResponse<TenantResponse>> updateTenant(@Body Map<String, String> body);
+
+    @HTTP(method = "DELETE", path = "flat_assigns", hasBody = true)
+    Call<ApiResponse<TenantResponse>> deleteTenant(@Body Map<String, String> body);
+
+    @POST("rents")
+    Call<ApiResponse> addRent(@Body HashMap<String, String> body);
+
+    @GET("rents")
+    Call<ApiResponse<List<Rent>>> getRents(
+            @Query("landlord_id") String landlordId,
+            @Query("tenant_id") String tenantId,
+            @Query("flat_id") String flatId,
+            @Query("building_id") String buildingId
+    );
+
+    @PATCH("rents")
+    Call<ApiResponse<Rent>> updateRent(@Body HashMap<String, String> body);
+
+
+
+    @GET("tenants/admin")
+    Call<TenantResponse> getAllTenants();
 }
