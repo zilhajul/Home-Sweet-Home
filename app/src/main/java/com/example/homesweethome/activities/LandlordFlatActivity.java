@@ -64,6 +64,8 @@ public class LandlordFlatActivity extends AppCompatActivity {
     private ImageView ivBack;
     private String buildingId;
     private ProgressBar progressBar;
+    private String action = null;
+    private String flatId;
 
     private RecyclerView rvFlatImagesPreview;
     private ImageAdapter imageAdapter;
@@ -88,11 +90,20 @@ public class LandlordFlatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landlord_flat);
 
+        action = getIntent().getStringExtra("action");
+        flatId = getIntent().getStringExtra("flatId");
+        buildingId = getIntent().getStringExtra("buildingId");
+
+
+
         initViews();
         initAuthService();
         getBuildings();
         setupImageLaunchers();
         setupListeners();
+
+        Log.d("LandlordFlatActivity", "onCreate called");
+        Log.d("LandlordFlatActivity", "action: " + action);
     }
 
     private void initViews() {
@@ -173,7 +184,9 @@ public class LandlordFlatActivity extends AppCompatActivity {
                             if (apiResponse.isSuccess()) {
                                 buildings.addAll(apiResponse.getData());
                                 if (buildings != null && !buildings.isEmpty()) {
-                                    setupSpinners();
+                                    if (action == null){
+                                        setupSpinners();
+                                    }
                                 } else {
                                     Toast.makeText(context, "No Building Added", Toast.LENGTH_SHORT).show();
                                 }
@@ -201,8 +214,9 @@ public class LandlordFlatActivity extends AppCompatActivity {
                        // ivFlatImagePreview.setImageURI(flatImageUri);
                          seletctedFlatImageUri = flatImageUri;
 
-                         if (seletctedFlatImageUri != null) {
-                             ivFlatImagePreview.setImageURI(seletctedFlatImageUri);
+                         if (flatImageUri != null) {
+                             ivFlatImagePreview.setVisibility(View.VISIBLE);
+                             ivFlatImagePreview.setImageURI(flatImageUri);
 
                          }
                     }
@@ -319,17 +333,17 @@ public class LandlordFlatActivity extends AppCompatActivity {
         RequestBody waterBillBody = RequestBody.create(MediaType.parse("text/plain"), waterBill);
         RequestBody serviceChargeBody = RequestBody.create(MediaType.parse("text/plain"), serviceCharge);
 
-        // Prepare cover image part (specific mime type — NOT "image/*")
+
+
+
         MultipartBody.Part flatImagePart = prepareFilePart("flat_image", flatImageUri);
 
-        // Prepare multiple image parts
         List<MultipartBody.Part> flatImagesParts = new ArrayList<>();
         for (Uri uri : flatImagesUris) {
             flatImagesParts.add(prepareFilePart("flat_images", uri));
         }
 
-        // FIX: empty list হলে AWS "x-amz-decoded-content-length: undefined" error দেয়
-        // তাই empty হলে একটা empty placeholder part দিতে হবে
+
         if (flatImagesParts.isEmpty()) {
             RequestBody emptyBody = RequestBody.create(MediaType.parse("image/jpeg"), new byte[0]);
             flatImagesParts.add(MultipartBody.Part.createFormData("flat_images", "", emptyBody));
@@ -340,33 +354,68 @@ public class LandlordFlatActivity extends AppCompatActivity {
         btnSubmitFlat.setEnabled(false);
 
         // API Call
-        Call<ApiResponse<Flat>> call = authService.addFlat(
-                landlordIdBody, buildingIdBody, flatNameBody, flatImagePart,
-                flatStatusBody, flatImagesParts, flatDetailBody, floorNumberBody,
-                flatRentBody, gasBillBody, electricityBillBody, waterBillBody, serviceChargeBody
-        );
+        if (action==null){
+            Call<ApiResponse<Flat>> call = authService.addFlat(
+                    landlordIdBody, buildingIdBody, flatNameBody, flatImagePart,
+                    flatStatusBody, flatImagesParts, flatDetailBody, floorNumberBody,
+                    flatRentBody, gasBillBody, electricityBillBody, waterBillBody, serviceChargeBody
+            );
 
-        call.enqueue(new Callback<ApiResponse<Flat>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<Flat>> call, Response<ApiResponse<Flat>> response) {
-                progressBar.setVisibility(View.GONE);
-                btnSubmitFlat.setEnabled(true);
+            call.enqueue(new Callback<ApiResponse<Flat>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Flat>> call, Response<ApiResponse<Flat>> response) {
+                    progressBar.setVisibility(View.GONE);
+                    btnSubmitFlat.setEnabled(true);
 
-                if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(LandlordFlatActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(LandlordFlatActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    if (response.isSuccessful() && response.body() != null) {
+                        Toast.makeText(LandlordFlatActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(LandlordFlatActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ApiResponse<Flat>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                btnSubmitFlat.setEnabled(true);
-                Toast.makeText(LandlordFlatActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<ApiResponse<Flat>> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    btnSubmitFlat.setEnabled(true);
+                    Toast.makeText(LandlordFlatActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            // Edit Flat
+            RequestBody flatIdBody = RequestBody.create(MediaType.parse("text/plain"), flatId);
+
+            Call<ApiResponse<Flat>> call = authService.updateFlat(
+                    flatIdBody, flatNameBody, flatImagePart,
+                    flatStatusBody, flatImagesParts, flatDetailBody,
+                    flatRentBody, gasBillBody, electricityBillBody, waterBillBody, serviceChargeBody
+            );
+
+            call.enqueue(new Callback<ApiResponse<Flat>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Flat>> call, Response<ApiResponse<Flat>> response) {
+                    progressBar.setVisibility(View.GONE);
+                    btnSubmitFlat.setEnabled(true);
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        Toast.makeText(LandlordFlatActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(LandlordFlatActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<Flat>> call, Throwable t) {
+                    progressBar.setVisibility(View.GONE);
+                    btnSubmitFlat.setEnabled(true);
+                    Toast.makeText(LandlordFlatActivity.this, "Failure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
     }
 
 

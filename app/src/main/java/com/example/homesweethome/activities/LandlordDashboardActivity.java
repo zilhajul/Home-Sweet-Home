@@ -54,13 +54,35 @@ public class LandlordDashboardActivity extends AppCompatActivity {
         binding.btnAddProperty.setOnClickListener(v -> openAddBuildingActivity());
         binding.propertyCardId.setOnClickListener(v -> openTotalPropertiesActivity());
         binding.tvLandlordName.setText(landlord.getLandlordName());
+        binding.ivNotification.setOnClickListener(view -> openNotificationActivity());
 
         TotalProperties = landlord.getAlreadyBuildingAdded();
        // int TotalTenants = landlord.getTenantAdded();
         binding.tvPropertiesCount.setText(String.valueOf(TotalProperties));
         binding.btnAddFlat.setOnClickListener(v -> openFlatActivity());
         binding.btnLogout.setOnClickListener(v -> logout(v));
+        binding.btnGenerateRent.setOnClickListener(v -> openGenerateRentActivity());
 
+
+    }
+
+    private void openNotificationActivity() {
+        Intent intent = new Intent(this, Notification.class);
+        intent.putExtra("landlordId", landlordId);
+        startActivity(intent);
+    }
+
+
+    private void openGenerateRentActivity() {
+        Intent intent = new Intent(this, Generate_Rent.class);
+        intent.putExtra("landlordId", landlordId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBuildings();
     }
 
     public void logout(View v) {
@@ -140,6 +162,7 @@ public class LandlordDashboardActivity extends AppCompatActivity {
 
     private void openTotalPropertiesActivity() {
       Intent intent = new Intent(this, TotalPropertiesActivity.class);
+      intent.putExtra("landlordId", landlordId);
        startActivity(intent);
 
     }

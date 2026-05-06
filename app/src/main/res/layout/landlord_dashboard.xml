@@ -403,6 +403,18 @@
                         android:background="@drawable/bg_button_primary"
                         android:stateListAnimator="@null"
                         android:fontFamily="sans-serif-medium" />
+                    <Button
+                        android:id="@+id/btnGenerateRent"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Generate Rant"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/bg_button_primary"
+                        android:stateListAnimator="@null"
+                        android:fontFamily="sans-serif-medium" />
 
                     <Button
                         android:id="@+id/btnSendReminder"

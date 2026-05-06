@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class Landlord {
 
     @SerializedName("_id")
-    private String id;
+    private  String id;
 
     @SerializedName("login_id")
     private String loginId;
@@ -56,7 +56,7 @@ public class Landlord {
 
     // ─── Getters & Setters ──────────────────────────────────────────────────────
 
-    public String getId() { return id; }
+    public  String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
     public String getLoginId() { return loginId; }
@@ -104,7 +104,6 @@ public class Landlord {
     public int getRemainingFlatAdd() { return remainingFlatAdd; }
     public void setRemainingFlatAdd(int remainingFlatAdd) { this.remainingFlatAdd = remainingFlatAdd; }
 
-    // ...existing code...
 
     public boolean isActive() {
         return "active".equalsIgnoreCase(landlordStatus);

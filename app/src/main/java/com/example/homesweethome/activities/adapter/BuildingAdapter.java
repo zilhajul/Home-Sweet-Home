@@ -1,18 +1,33 @@
 package com.example.homesweethome.activities.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.homesweethome.R;
+import com.example.homesweethome.activities.LandlordAddBuildingActivity;
+import com.example.homesweethome.api.RetrofitClient;
 import com.example.homesweethome.databinding.ItemBuildingBinding;
+import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Building;
+import com.example.homesweethome.model.BuildingsResponse;
+import com.example.homesweethome.model.TenantResponse;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.BuildingViewHolder> {
 
@@ -72,6 +87,7 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.Buildi
                         .into(binding.ivBuildingImage);
             }
 
+
             // Set building details
             binding.tvBuildingName.setText(building.getBuildingName() != null ? 
                     building.getBuildingName() : "N/A");
@@ -104,6 +120,59 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.Buildi
             binding.btnEdit.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onEditClick(building);
+                }
+
+                String buildingId = building.getId();
+
+                Intent intent = new Intent(context, LandlordAddBuildingActivity.class);
+                intent.putExtra("buildingId", buildingId);
+                intent.putExtra("action", "edit");
+                context.startActivity(intent);
+
+            });
+
+            binding.btnDeleteBuilding.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+            String buildingId = building.getId();
+
+                    HashMap<String,String> body = new HashMap<>();
+
+                    body.put("_id",buildingId);
+
+
+                    RetrofitClient.getInstance(context).getBuildingService().deleteBuilding(body)
+                            .enqueue(new Callback<ApiResponse<BuildingsResponse>>() {
+
+                                @Override
+                                public void onResponse(Call<ApiResponse<BuildingsResponse>> call, Response<ApiResponse<BuildingsResponse>> response) {
+                                    if (response.isSuccessful() && response.body() != null){
+                                        if (response.body().isSuccess()){
+                                            buildingList.remove(building);
+                                            notifyDataSetChanged();
+                                        }
+                                    }else {
+                                        try {
+                                            String errorBody = response.errorBody().string();
+
+                                            JSONObject jsonObject = new JSONObject(errorBody);
+                                            String message = jsonObject.getString("message");
+
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(context, "Failed To DELETE BUILDING", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ApiResponse<BuildingsResponse>> call, Throwable throwable) {
+
+                                }
+                            });
+
                 }
             });
         }

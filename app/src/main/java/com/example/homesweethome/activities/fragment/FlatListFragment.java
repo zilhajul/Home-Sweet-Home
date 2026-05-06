@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,8 @@ public class FlatListFragment extends Fragment {
     private FlatAdapter adapter;
     private List<Flat> flatList = new ArrayList<>();
     private ProgressBar progressBar;
-    private TextView nothing_found_txt;
+    private TextView nothing_found_txt, tvFlatCount;
+    private ImageView btnBack;
 
 
     @Override
@@ -50,7 +52,12 @@ public class FlatListFragment extends Fragment {
         }
 
 
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchFlats();
     }
 
     @Override
@@ -64,13 +71,21 @@ public class FlatListFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         nothing_found_txt = view.findViewById(R.id.nothing_found_txt);
         rvFlats.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new FlatAdapter(flatList, requireContext());
+        adapter = new FlatAdapter(flatList, requireContext(), buildingId, landlordId);
         rvFlats.setAdapter(adapter);
+
+
+
+        btnBack = view.findViewById(R.id.ivBack);
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
 
         sessionManager = new SessionManager(requireContext());
 
 
         fetchFlats();
+
+        tvFlatCount = view.findViewById(R.id.tvFlatCount);
 
         return view;
     }
@@ -98,6 +113,9 @@ public class FlatListFragment extends Fragment {
                                 flatList.clear();
                                 flatList.addAll(flatsFromApi);
                                 adapter.notifyDataSetChanged();
+
+                                tvFlatCount.setText(flatList.size() + " Flats");
+
                             }else {
                                 rvFlats.setVisibility(GONE);
                                 nothing_found_txt.setVisibility(VISIBLE);
