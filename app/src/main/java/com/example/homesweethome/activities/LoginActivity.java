@@ -17,6 +17,7 @@ import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Landlord;
 import com.example.homesweethome.model.LoginRequest;
 import com.example.homesweethome.model.SignInResponse;
+import com.example.homesweethome.model.Tenant;
 import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.User;
 import com.example.homesweethome.preferences.SessionManager;
@@ -259,19 +260,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onLoginSuccess(SignInResponse response) {
         Log.d("LoginActivity", "onLoginSuccess called with token: " + response.getToken());
-        
-        // Store token temporarily in SessionManager
+
         sessionManager.saveSelectedRole(role);
-        
+
         if ("landlord".equalsIgnoreCase(role)) {
             // For landlord: fetch landlord info and then proceed
             fetchLandlordInfo(response.getToken());
         } else {
-            // For tenant: proceed directly to dashboard
-            Intent intent = new Intent(this, TenantDashboardActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            // ✅ Tenant token SessionManager এ save করো
+            // যাতে RetrofitClient interceptor সব request এ Bearer token পাঠাতে পারে
+            sessionManager.saveToken(response.getToken());
+            Log.d("LoginActivity", "Tenant token saved: " + response.getToken());
+            fetchTenantInfo(response.getToken());
+//            Intent intent = new Intent(this, TenantDashboardActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            finish();
         }
     }
 
@@ -338,6 +342,57 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private void fetchTenantInfo(String token) {
+        Log.d("LoginActivity", "Fetching tenant information with token");
 
+        SharedPreferences prefs = getSharedPreferences("house_rent_session", MODE_PRIVATE);
+        prefs.edit().putString("auth_token", token).apply();
+
+        RetrofitClient.getInstance(this).setSessionManager(sessionManager);
+
+        RetrofitClient.getInstance(this).getAuthService().getTenant()
+                .enqueue(new Callback<ApiResponse<Tenant>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ApiResponse<Tenant>> call,
+                                           @NonNull Response<ApiResponse<Tenant>> response) {
+
+                        Log.d("LoginActivity", "=== Tenant Info Response ===");
+                        Log.d("LoginActivity", "isSuccessful: " + response.isSuccessful());
+
+                        if (!response.isSuccessful()) {
+                            Log.e("LoginActivity", "Failed to fetch tenant info: HTTP " + response.code());
+                            UiUtils.showError(binding.getRoot(), "Failed to fetch tenant information");
+                            return;
+                        }
+
+                        if (response.body() == null || response.body().getData() == null) {
+                            Log.e("LoginActivity", "Tenant info response is null");
+                            UiUtils.showError(binding.getRoot(), getString(R.string.error_generic));
+                            return;
+                        }
+
+                        Tenant tenant = response.body().getData();
+                        Log.d("LoginActivity", "Tenant info fetched successfully");
+
+                        Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // Save tenant info
+                        sessionManager.saveTenantInfo(tenant);
+
+                        // Direct dashboard (tenant er jonno usually subscription check lage na)
+                        Intent intent = new Intent(LoginActivity.this, TenantDashboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ApiResponse<Tenant>> call,
+                                          @NonNull Throwable t) {
+                        Log.e("LoginActivity", "Failed to fetch tenant info: " + t.getMessage(), t);
+                        UiUtils.showError(binding.getRoot(), getString(R.string.error_network));
+                    }
+                });
+    }
 
 }

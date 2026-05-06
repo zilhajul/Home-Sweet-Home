@@ -89,6 +89,10 @@ public class ComplainActivity extends AppCompatActivity {
         String flatName     = getIntent().getStringExtra(EXTRA_FLAT_NAME);
         String buildingName = getIntent().getStringExtra(EXTRA_BUILDING_NAME);
 
+        tvTenantName.setText(tenantName);
+        tvFlatName.setText(flatName);
+        tvBuildingName.setText(buildingName);
+
         // "Submitting As" card populate করো
         if (!TextUtils.isEmpty(tenantName))   tvTenantName.setText(tenantName);
         if (!TextUtils.isEmpty(flatName))     tvFlatName.setText(flatName);

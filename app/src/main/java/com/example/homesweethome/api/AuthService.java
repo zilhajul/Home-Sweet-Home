@@ -11,6 +11,8 @@ import com.example.homesweethome.model.RegisterRequest;
 import com.example.homesweethome.model.Subscription;
 import com.example.homesweethome.model.SignInResponse;
 import com.example.homesweethome.model.SubscriptionPurchaseResponse;
+import com.example.homesweethome.model.Tenant;
+import com.example.homesweethome.model.TenantFlatResponse;
 import com.example.homesweethome.model.TenantLoginRequest;
 import com.example.homesweethome.model.TenantRegisterRequest;
 import com.example.homesweethome.model.User;
@@ -91,5 +93,11 @@ public interface AuthService {
             @Query("landlord_id") String landlordId,
             @Query("tenant_id") String tenantId
     );
+
+    @GET("tenants")
+    Call<ApiResponse<Tenant>> getTenant();
+
+    @GET("flats/tenant")
+    Call<TenantFlatResponse> getTenantFlats(@Query("tenant_id") String tenantId);
 
 }
