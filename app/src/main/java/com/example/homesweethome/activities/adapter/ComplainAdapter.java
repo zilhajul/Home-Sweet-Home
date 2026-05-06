@@ -1,7 +1,7 @@
 package com.example.homesweethome.activities.adapter;
 
 import android.content.Context;
-import android.text.Layout;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,10 +63,16 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.Compla
             holder.etResponse.setVisibility(View.VISIBLE);
             holder.btnCancle.setVisibility(View.VISIBLE);
             holder.btnConfirm.setVisibility(View.VISIBLE);
+            holder.tvStatus.setTextColor(context.getColor(R.color.colorStatusPartial));
         }else if(status.equals("Resolved") || status.equals("Rejected")) {
             holder.etResponse.setVisibility(View.GONE);
             holder.btnCancle.setVisibility(View.GONE);
             holder.btnConfirm.setVisibility(View.GONE);
+            if (status.equals("Resolved")){
+                holder.tvStatus.setTextColor(context.getColor(R.color.colorStatusPaid));
+            }else {
+                holder.tvStatus.setTextColor(context.getColor(R.color.colorStatusUnpaid));
+            }
         }
 
         holder.btnConfirm.setOnClickListener(new View.OnClickListener() {

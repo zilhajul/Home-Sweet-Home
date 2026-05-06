@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class TenantDashboardActivity extends AppCompatActivity {
     // ---- Loading ----
     private ProgressBar progressBar;
     private ScrollView  scrollView;
+    private ImageView ivNotification;
 
     // ---- Header ----
     private TextView tvTenantName;
@@ -100,6 +102,7 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
         // Header
         tvTenantName   = findViewById(R.id.tvTenantName);
+        ivNotification = findViewById(R.id.ivNotification);
 
         // Flat card
         tvFlatNumber   = findViewById(R.id.tvFlatNumber);
@@ -118,6 +121,12 @@ public class TenantDashboardActivity extends AppCompatActivity {
         // Buttons
         btnComplain    = findViewById(R.id.btnComplain);
         btnComplain.setOnClickListener(v -> openComplainActivity());
+
+        ivNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TenantNotification.class);
+            intent.putExtra("tenantId",     tenantId);
+            startActivity(intent);
+        });
 
         // Logout
         findViewById(R.id.ivLogout).setOnClickListener(v -> logout());

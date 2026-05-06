@@ -17,6 +17,9 @@
         android:theme="@style/Theme.HomeSweetHome"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.TenantNotification"
+            android:exported="false" />
+        <activity
             android:name=".activities.ViewInfo"
             android:exported="false" />
         <activity

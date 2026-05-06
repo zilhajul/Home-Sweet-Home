@@ -1,8 +1,8 @@
 package com.example.homesweethome.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,46 +28,32 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Notification extends AppCompatActivity {
+public class TenantNotification extends AppCompatActivity {
 
-    private String landlordId;
+    private List<Complain> complainList = new ArrayList<>();
     private RecyclerView rvNotification;
     private TextView tvNoNotifications;
-    private List<Complain> complainList = new ArrayList<>();
-    private ComplainAdapter adapter;
-    private ImageView ivBack;
+    private TenantComplainAdapter adapter;
 
-
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_notification);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.activity_tenant_notification);
+        String tenantId = getIntent().getStringExtra("tenantId");
 
-        landlordId = getIntent().getStringExtra("landlordId");
         rvNotification = findViewById(R.id.rvNotifications);
         tvNoNotifications = findViewById(R.id.tvNoNotifications);
-        ivBack = findViewById(R.id.ivBack);
 
-        ivBack.setOnClickListener(view -> onBackPressed());
+        getComplains(tenantId);
 
-        getComplains();
-
-        adapter = new ComplainAdapter(complainList,getApplicationContext());
+        adapter = new TenantComplainAdapter(complainList,getApplicationContext());
         rvNotification.setLayoutManager(new LinearLayoutManager(this));
         rvNotification.setAdapter(adapter);
 
-
     }
-
-    public void getComplains(){
-        RetrofitClient.getInstance(this).getAuthService().getComplains(landlordId,null)
+    public void getComplains(String tenantId){
+        RetrofitClient.getInstance(this).getAuthService().getComplains(null,tenantId)
                 .enqueue(new Callback<ApiResponse<List<Complain>>>() {
 
 
@@ -88,7 +74,7 @@ public class Notification extends AppCompatActivity {
                                 tvNoNotifications.setVisibility(View.GONE);
                                 rvNotification.setVisibility(View.VISIBLE);
 
-                                Toast.makeText(Notification.this, "Notification Fetched Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TenantNotification.this, "Notification Fetched Successfully", Toast.LENGTH_SHORT).show();
 
 
                             }

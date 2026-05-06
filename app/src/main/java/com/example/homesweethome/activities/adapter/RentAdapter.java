@@ -145,8 +145,6 @@ public class RentAdapter extends RecyclerView.Adapter<RentAdapter.RentViewHolder
             tvServiceCharge = itemView.findViewById(R.id.tvServiceCharge);
             tvTotal = itemView.findViewById(R.id.tvTotalRent);
             btnMpaid = itemView.findViewById(R.id.btnMarkPaid);
-            tvLivingF = itemView.findViewById(R.id.tvTenantLivingFrom);
-
         }
     }
 
