@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.homesweethome.R;
 import com.example.homesweethome.api.RetrofitClient;
@@ -40,6 +41,8 @@ public class TenantDashboardActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ScrollView  scrollView;
     private ImageView ivNotification;
+    private CardView cardViewId;
+
 
     // ---- Header ----
     private TextView tvTenantName;
@@ -103,6 +106,7 @@ public class TenantDashboardActivity extends AppCompatActivity {
         // Header
         tvTenantName   = findViewById(R.id.tvTenantName);
         ivNotification = findViewById(R.id.ivNotification);
+        cardViewId = findViewById(R.id.cardViewId);
 
         // Flat card
         tvFlatNumber   = findViewById(R.id.tvFlatNumber);
@@ -126,6 +130,17 @@ public class TenantDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(this, TenantNotification.class);
             intent.putExtra("tenantId",     tenantId);
             startActivity(intent);
+        });
+
+        cardViewId.setOnClickListener(v -> {
+
+            Intent intent = new Intent(this, TenantViewInfo.class);
+            intent.putExtra("tenantId",     tenantId);
+            intent.putExtra("landlordId",   landlordId);
+            intent.putExtra("buildingId",   buildingId);
+            intent.putExtra("flatId",       flatId);
+            startActivity(intent);
+
         });
 
         // Logout
@@ -251,10 +266,10 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
                         // Save IDs for ComplainActivity
                         flatId     = flat.getId();
-                        buildingId = flat.getBuildingId() != null ? flat.getBuildingId().getId() : "";
-                        landlordId = flat.getLandlordId() != null ? flat.getLandlordId().getId() : "";
+                        buildingId = flat.getBuildingId().getId() != null ? flat.getBuildingId().getId() : "";
+                        landlordId = flat.getLandlordId().getId() != null ? flat.getLandlordId().getId() : "";
                         flatName   = flat.getFlatName();
-                        buildingName = flat.getBuildingId() != null
+                        buildingName = flat.getBuildingId().getBuildingName() != null
                                 ? flat.getBuildingId().getBuildingName() : "";
 
                         Log.d(TAG, "Flat loaded: " + flatName + " | landlordId=" + landlordId);

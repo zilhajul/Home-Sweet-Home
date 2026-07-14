@@ -3,8 +3,18 @@ package com.example.homesweethome.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Rent {
+
     @SerializedName("_id")
     private String id;
+
+    @SerializedName("landlord_id")
+    private Landlord landlordId;
+
+    @SerializedName("building_id")
+    private Building buildingId;
+
+    @SerializedName("flat_id")
+    private Flat flatId;
 
     @SerializedName("rent_month")
     private String rentMonth;
@@ -35,7 +45,6 @@ public class Rent {
 
     @SerializedName("tenant_id")
     private Tenant tenantId;
-    // getters...
 
 
     public String getId() {
@@ -44,6 +53,28 @@ public class Rent {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Landlord getLandlordId() {return landlordId;}
+
+    public void setLandlordId(Landlord landlordId) {
+        this.landlordId = landlordId;
+    }
+
+    public Building getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Building buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Flat getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Flat flatId) {
+        this.flatId = flatId;
     }
 
     public String getRentMonth() {

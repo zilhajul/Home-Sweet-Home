@@ -41,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ViewInfo extends AppCompatActivity {
+public class TenantViewInfo extends AppCompatActivity {
 
     private String flatId, buildingId, landlordId, tenantId;
 
@@ -61,14 +61,14 @@ public class ViewInfo extends AppCompatActivity {
     private SessionManager sessionManager;
 
     private static final String TAG = "ViewInfo";
-    private String From = "landlorde";
+    private String From= "tenant";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_info);
 
-        // Get data from intent
+
         flatId = getIntent().getStringExtra("flatId");
         buildingId = getIntent().getStringExtra("buildingId");
         landlordId = getIntent().getStringExtra("landlordId");
@@ -160,15 +160,15 @@ public class ViewInfo extends AppCompatActivity {
                             }
                         } else {
                             Log.e(TAG, "Flat with ID " + flatId + " not found");
-                            Toast.makeText(ViewInfo.this, "Flat not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TenantViewInfo.this, "Flat not found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Log.e(TAG, "No flats found in response");
-                        Toast.makeText(ViewInfo.this, "No flats available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TenantViewInfo.this, "No flats available", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.e(TAG, "API response failed: " + response.code());
-                    Toast.makeText(ViewInfo.this, "Failed to fetch flat data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TenantViewInfo.this, "Failed to fetch flat data", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -176,7 +176,7 @@ public class ViewInfo extends AppCompatActivity {
             public void onFailure(Call<FlatResponse> call, Throwable t) {
                 showProgressBar(false);
                 Log.e(TAG, "API call failed: " + t.getMessage(), t);
-                Toast.makeText(ViewInfo.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TenantViewInfo.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -211,16 +211,12 @@ public class ViewInfo extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<ApiResponse<List<Rent>>> call, Throwable throwable) {
 
-                        Log.e(TAG, "Failed to fetch rent data: " + throwable.getMessage(), throwable);
                     }
                 });
     }
 
 
     private Flat findFlatById(List<Flat> flats, String flatId) {
-        if (flatId == null || flatId.isEmpty()) {
-            return !flats.isEmpty() ? flats.get(0) : null;
-        }
 
         for (Flat flat : flats) {
             if (flat.getId() != null && flat.getId().equals(flatId)) {

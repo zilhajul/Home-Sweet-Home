@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,7 @@ public class FlatListFragment extends Fragment {
                         nothing_found_txt.setVisibility(VISIBLE);
                         nothing_found_txt.setText(throwable.getMessage());
                         Toast.makeText(getContext(), "Flat fetch failed due to "+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("FlatListFragment", "Flat fetch failed due to: " + throwable.getMessage());
                         progressBar.setVisibility(GONE);
                     }
                 });
