@@ -51,7 +51,7 @@ public class TenantViewInfo extends AppCompatActivity {
     private ProgressBar progressBar;
     private ImageView ivBack, ivTenant;
 
-    private com.example.homesweethome.activities.ImageSliderAdapter imageAdapter;
+    private com.example.homesweethome.activities.adapter.ImageSliderAdapter imageAdapter;
     private RentAdapter rentAdapter;
 
     private List<String> imageList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class TenantViewInfo extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        imageAdapter = new com.example.homesweethome.activities.ImageSliderAdapter(imageList);
+        imageAdapter = new com.example.homesweethome.activities.adapter.ImageSliderAdapter(imageList);
         vpImages.setAdapter(imageAdapter);
     }
 
@@ -150,7 +150,7 @@ public class TenantViewInfo extends AppCompatActivity {
                         Flat flat = findFlatById(flatResponse.getData(), flatId);
 
                         if (flat != null) {
-                            displayFlatData(flat);
+                                displayFlatData(flat);
                             // Display tenant info directly from flat object
                             if (flat.getTenantId() != null) {
                                 displayTenantInfo(flat.getTenantId());

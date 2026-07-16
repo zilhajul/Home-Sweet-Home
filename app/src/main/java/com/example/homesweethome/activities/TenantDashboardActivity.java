@@ -17,13 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.bumptech.glide.Glide;
 import com.example.homesweethome.R;
 import com.example.homesweethome.api.RetrofitClient;
-import com.example.homesweethome.model.ApiResponse;
 import com.example.homesweethome.model.Tenant;
 import com.example.homesweethome.model.TenantFlatResponse;
 import com.example.homesweethome.preferences.SessionManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,9 +40,10 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
     // ---- Loading ----
     private ProgressBar progressBar;
-    private ScrollView  scrollView;
+    private ScrollView scrollView;
     private ImageView ivNotification;
     private CardView cardViewId;
+    private com.example.homesweethome.activities.adapter.ImageSliderAdapter imageAdapter;
 
 
     // ---- Header ----
@@ -54,6 +56,9 @@ public class TenantDashboardActivity extends AppCompatActivity {
     private TextView tvMonthlyRent;
     private TextView tvFloor;
     private TextView tvRentSince;
+    private List<String> imageList = new ArrayList<>();
+    private String imageUrl;
+    private ImageView vpImages;
 
     // ---- Bills & Charges ----
     private TextView tvUtilityBill;   // electricity_bill
@@ -76,7 +81,7 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
     // ---- API call tracking (call both APIs, show UI when both done) ----
     private boolean tenantLoaded = false;
-    private boolean flatLoaded   = false;
+    private boolean flatLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,51 +99,49 @@ public class TenantDashboardActivity extends AppCompatActivity {
 //        fetchTenantInfo();
     }
 
-    // =========================================================================
-    // Init
-    // =========================================================================
 
     private void initViews() {
         // Loading overlay (programmatically added so no XML change needed)
-        scrollView  = findViewById(R.id.scrollViewDashboard); // see note below *
+        scrollView = findViewById(R.id.scrollViewDashboard); // see note below *
         progressBar = createFullScreenProgressBar();
 
         // Header
-        tvTenantName   = findViewById(R.id.tvTenantName);
+        tvTenantName = findViewById(R.id.tvTenantName);
         ivNotification = findViewById(R.id.ivNotification);
         cardViewId = findViewById(R.id.cardViewId);
 
         // Flat card
-        tvFlatNumber   = findViewById(R.id.tvFlatNumber);
+        tvFlatNumber = findViewById(R.id.tvFlatNumber);
         tvBuildingName = findViewById(R.id.tvBuildingName);
-        tvFlatStatus   = findViewById(R.id.tvFlatStatus);
-        tvMonthlyRent  = findViewById(R.id.tvMonthlyRent);
-        tvFloor        = findViewById(R.id.tvFloor);
-        tvRentSince    = findViewById(R.id.tvRentSince);
+        tvFlatStatus = findViewById(R.id.tvFlatStatus);
+        tvMonthlyRent = findViewById(R.id.tvMonthlyRent);
+        tvFloor = findViewById(R.id.tvFloor);
+        tvRentSince = findViewById(R.id.tvRentSince);
+        vpImages = findViewById(R.id.imageView);
+
 
         // Bills
-        tvUtilityBill  = findViewById(R.id.tvUtilityBill);
-        tvGasBill      = findViewById(R.id.tvGasBill);
-        tvWaterBill    = findViewById(R.id.tvWaterBill);
+        tvGasBill = findViewById(R.id.tvGasBill);
+        tvWaterBill = findViewById(R.id.tvWaterBill);
         tvServiceCharge = findViewById(R.id.tvServiceCharge);
 
         // Buttons
-        btnComplain    = findViewById(R.id.btnComplain);
+        btnComplain = findViewById(R.id.btnComplain);
         btnComplain.setOnClickListener(v -> openComplainActivity());
 
         ivNotification.setOnClickListener(v -> {
             Intent intent = new Intent(this, TenantNotification.class);
-            intent.putExtra("tenantId",     tenantId);
+            intent.putExtra("tenantId", tenantId);
             startActivity(intent);
         });
 
         cardViewId.setOnClickListener(v -> {
 
             Intent intent = new Intent(this, TenantViewInfo.class);
-            intent.putExtra("tenantId",     tenantId);
-            intent.putExtra("landlordId",   landlordId);
-            intent.putExtra("buildingId",   buildingId);
-            intent.putExtra("flatId",       flatId);
+            intent.putExtra("tenantId", tenantId);
+            intent.putExtra("landlordId", landlordId);
+            intent.putExtra("buildingId", buildingId);
+            intent.putExtra("flatId", flatId);
             startActivity(intent);
 
         });
@@ -150,17 +153,7 @@ public class TenantDashboardActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Creates a centered ProgressBar and adds it as an overlay on top of the
-     * root FrameLayout so we don't need to touch the XML.
-     *
-     * ⚠️ NOTE: Your root layout is a ScrollView. Wrap it in a FrameLayout in XML
-     * and give the FrameLayout id="@+id/rootFrame", OR just give the ScrollView
-     * id="@+id/scrollViewDashboard" and use the approach below.
-     *
-     * If you don't want to touch the XML at all, we hide/show the ScrollView
-     * and show/hide a ProgressBar added to the window's DecorView.
-     */
+
     private ProgressBar createFullScreenProgressBar() {
         ProgressBar pb = new ProgressBar(this);
         pb.setVisibility(View.GONE);
@@ -176,9 +169,6 @@ public class TenantDashboardActivity extends AppCompatActivity {
         return pb;
     }
 
-    // =========================================================================
-    // API: GET /tenants  →  Tenant info
-    // =========================================================================
 
 //    private void fetchTenantInfo() {
 //
@@ -231,9 +221,6 @@ public class TenantDashboardActivity extends AppCompatActivity {
 //                });
 //    }
 
-    // =========================================================================
-    // API: GET /flats/tenant?tenant_id=...  →  Flat + Bill info
-    // =========================================================================
 
     private void fetchTenantFlat(String tId) {
         RetrofitClient.getInstance(this)
@@ -265,33 +252,30 @@ public class TenantDashboardActivity extends AppCompatActivity {
                         TenantFlatResponse.FlatData flat = flatList.get(0);
 
                         // Save IDs for ComplainActivity
-                        flatId     = flat.getId();
+                        flatId = flat.getId();
                         buildingId = flat.getBuildingId().getId() != null ? flat.getBuildingId().getId() : "";
                         landlordId = flat.getLandlordId().getId() != null ? flat.getLandlordId().getId() : "";
-                        flatName   = flat.getFlatName();
+                        flatName = flat.getFlatName();
                         buildingName = flat.getBuildingId().getBuildingName() != null
                                 ? flat.getBuildingId().getBuildingName() : "";
-
+                        imageUrl = flat.getFlatImage();
+                        loadImage(imageUrl);
                         Log.d(TAG, "Flat loaded: " + flatName + " | landlordId=" + landlordId);
 
                         populateFlatUI(flat);
-
                         flatLoaded = true;
                         checkBothLoaded();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<TenantFlatResponse> call,
-                                         @NonNull Throwable t) {
+                                          @NonNull Throwable t) {
                         Log.e(TAG, "getTenantFlats network error: " + t.getMessage(), t);
                         onApiError("Network error. Please check your connection.");
                     }
                 });
     }
 
-    // =========================================================================
-    // Populate UI
-    // =========================================================================
 
     private void populateFlatUI(TenantFlatResponse.FlatData flat) {
         // Flat Info Card
@@ -314,17 +298,6 @@ public class TenantDashboardActivity extends AppCompatActivity {
                 ? "st" : flat.getFloorNumber() == 2 ? "nd"
                 : flat.getFloorNumber() == 3 ? "rd" : "th") + " Floor");
 
-        // Rent since (from createdAt — e.g. "2026-04-25T12:08:33.409Z" → "Apr 2026")
-        tvRentSince.setText(formatMonthYear(flat.getCreatedAt()));
-
-        // Monthly Rent
-        tvMonthlyRent.setText("৳ " + formatAmount(flat.getFlatRent()));
-
-        // Bills
-        tvUtilityBill.setText("৳ " + formatAmount(flat.getElectricityBill()));
-        tvGasBill.setText("৳ " + formatAmount(flat.getGasBill()));
-        tvWaterBill.setText("৳ " + formatAmount(flat.getWaterBill()));
-        tvServiceCharge.setText("৳ " + formatAmount(flat.getServiceCharge()));
     }
 
     // =========================================================================
@@ -338,12 +311,12 @@ public class TenantDashboardActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, ComplainActivity.class);
-        intent.putExtra(ComplainActivity.EXTRA_TENANT_ID,     tenantId);
-        intent.putExtra(ComplainActivity.EXTRA_LANDLORD_ID,   landlordId);
-        intent.putExtra(ComplainActivity.EXTRA_BUILDING_ID,   buildingId);
-        intent.putExtra(ComplainActivity.EXTRA_FLAT_ID,       flatId);
-        intent.putExtra(ComplainActivity.EXTRA_TENANT_NAME,   tenantName);
-        intent.putExtra(ComplainActivity.EXTRA_FLAT_NAME,     flatName);
+        intent.putExtra(ComplainActivity.EXTRA_TENANT_ID, tenantId);
+        intent.putExtra(ComplainActivity.EXTRA_LANDLORD_ID, landlordId);
+        intent.putExtra(ComplainActivity.EXTRA_BUILDING_ID, buildingId);
+        intent.putExtra(ComplainActivity.EXTRA_FLAT_ID, flatId);
+        intent.putExtra(ComplainActivity.EXTRA_TENANT_NAME, tenantName);
+        intent.putExtra(ComplainActivity.EXTRA_FLAT_NAME, flatName);
         intent.putExtra(ComplainActivity.EXTRA_BUILDING_NAME, buildingName);
         startActivity(intent);
     }
@@ -356,13 +329,10 @@ public class TenantDashboardActivity extends AppCompatActivity {
         finish();
     }
 
-    // =========================================================================
-    // Loading State
-    // =========================================================================
 
     private void showLoading(boolean loading) {
         if (progressBar != null) progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        if (scrollView  != null) scrollView.setVisibility(loading ? View.INVISIBLE : View.VISIBLE);
+        if (scrollView != null) scrollView.setVisibility(loading ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void checkBothLoaded() {
@@ -381,27 +351,31 @@ public class TenantDashboardActivity extends AppCompatActivity {
         });
     }
 
-    // =========================================================================
-    // Helpers
-    // =========================================================================
 
-    /** Format double to comma-separated string, e.g. 5000.0 → "5,000" */
     private String formatAmount(double amount) {
         long val = (long) amount;
         return String.format("%,d", val);
     }
 
-    /** Parse ISO date string to "MMM yyyy", e.g. "2026-04-25T12:08:33.409Z" → "Apr 2026" */
+
     private String formatMonthYear(String isoDate) {
         if (isoDate == null || isoDate.length() < 7) return "";
         try {
-            String[] months = {"Jan","Feb","Mar","Apr","May","Jun",
-                               "Jul","Aug","Sep","Oct","Nov","Dec"};
+            String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
             int month = Integer.parseInt(isoDate.substring(5, 7)) - 1;
-            String year  = isoDate.substring(0, 4);
+            String year = isoDate.substring(0, 4);
             return months[month] + " " + year;
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    private void loadImage(String imageUrl) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .into(vpImages);
         }
     }
 }

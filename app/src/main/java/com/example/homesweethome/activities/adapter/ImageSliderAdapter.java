@@ -1,4 +1,4 @@
-package com.example.homesweethome.activities;
+package com.example.homesweethome.activities.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

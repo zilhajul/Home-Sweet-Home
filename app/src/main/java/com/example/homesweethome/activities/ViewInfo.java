@@ -51,7 +51,7 @@ public class ViewInfo extends AppCompatActivity {
     private ProgressBar progressBar;
     private ImageView ivBack, ivTenant;
 
-    private com.example.homesweethome.activities.ImageSliderAdapter imageAdapter;
+    private com.example.homesweethome.activities.adapter.ImageSliderAdapter imageAdapter;
     private RentAdapter rentAdapter;
 
     private List<String> imageList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class ViewInfo extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        imageAdapter = new com.example.homesweethome.activities.ImageSliderAdapter(imageList);
+        imageAdapter = new com.example.homesweethome.activities.adapter.ImageSliderAdapter(imageList);
         vpImages.setAdapter(imageAdapter);
     }
 
